@@ -6,7 +6,8 @@
 <!DOCTYPE html>
 <html class>
 <head>
-<script type="text/javascript" src="/resources/js/jquery-3.6.0.js"></script>
+    <!--  jsGrid.js와 충돌나서 주석처리함 2023.12.14 -->
+<!-- <script type="text/javascript" src="/resources/js/jquery-3.6.0.js"></script> -->
     <title>SB Admin 2 - Dashboard</title>
 
     <!-- Custom fonts for this template-->
@@ -93,7 +94,8 @@
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="/resources/sbadmin2/vendor/jquery/jquery.min.js"></script>
+    <!--  jsGrid.js와 충돌나서 주석처리함 2023.12.14 -->
+<!--     <script src="/resources/sbadmin2/vendor/jquery/jquery.min.js"></script> -->
     <script src="/resources/sbadmin2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->

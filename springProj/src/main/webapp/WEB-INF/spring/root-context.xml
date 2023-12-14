@@ -16,10 +16,12 @@
 	<bean id="dataSource"
 		class="org.apache.commons.dbcp2.BasicDataSource"
 		destroy-method="close">
-		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
-		<property name="username" value="spring" />
-		<property name="password" value="java" />
+<!-- 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" /> -->
+		<property name="driverClassName" value="org.mariadb.jdbc.Driver" />
+<!-- 		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" /> -->
+		<property name="url" value="jdbc:mariadb://ubizit.kr:23306/ubiz_toy?serverTimezone=Asia/Seoul" />
+		<property name="username" value="ubiz" />
+		<property name="password" value="ubizit4480" />
 	</bean>
 	<!-- 데이터베이스와 연결을 맺고 끊어질 때까지의 라이프 사이클을 관리해주는
 	sqlSession 객체를 생성 

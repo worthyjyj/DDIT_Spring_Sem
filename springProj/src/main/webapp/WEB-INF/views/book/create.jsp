@@ -65,6 +65,102 @@ $(function() {
 	</p>
 	<sec:csrfInput/>
 </form>
+
+<!-- 동적인 테이블 작성 연습 끝 -->
+<table border="1">
+<thead>
+	<tr>
+		<th>
+		 No.
+		</th>
+		<th>
+		이름
+		</th>
+		<th>
+		직업
+		</th>
+		<th>
+		나이
+		</th>
+		<th>
+		성별
+		</th>
+		<td>
+		<input type="button" class="addBtn" value="추가"/>
+		</td>
+	</tr>
+</thead>
+	<tr>
+		<td>
+		<input type="text" name="Indiarr[0].no"/>
+		</td>
+		<td>
+		<input type="text" name="Indiarr[0].nm" />
+		</td>
+		<td>
+		<input type="text" name="Indiarr[0].job"/>
+		</td>
+		<td>
+		<input type="text" name="Indiarr[0].age"/>
+		</td>
+		<td>
+		<input type="text" name="Indiarr[0].sex"/>
+		</td>
+		<td>
+		<input type="button" value="삭제" style="color:red;" class="delete" onclick="delRow(this)"/>
+		</td>
+	</tr>
+	<tbody id="add"></tbody>
+</table>
+<!-- 동적인 테이블 작성 연습 끝 -->
+
+<script>
+
+var cnt = 1;
+
+$('.addBtn').on("click", function(){
+	var str = "";
+		                                                    
+	str+="	<tr>                                                       ";
+	str+="	<td>                                                       ";
+	str+="	<input type='text' name='Indiarr["+cnt+"].no'/>                      ";
+	str+="	</td>                                                      ";
+	str+="	<td>                                                       ";
+	str+="	<input type='text' name='Indiarr["+cnt+"].nm'/>                       ";
+	str+="	</td>                                                      ";
+	str+="	<td>                                                       ";
+	str+="	<input type='text' name='Indiarr["+cnt+"].job'/>           ";
+	str+="	</td>                                                      ";
+	str+="	<td>                                                       ";
+	str+="	<input type='text' name='Indiarr["+cnt+"].age'/>                    ";
+	str+="	</td>                                                      ";
+	str+="	<td>                                                       ";
+	str+="	<input type='text' name='Indiarr["+cnt+"].sex'/>          ";
+	str+="	</td>                                                      ";
+	str+="	<td>                                                       ";
+	str+="	<input type='button' value='삭제' style='color:red;' class='delete' onclick='delRow(this)' />     ";
+	str+="	</td>                                                      ";
+	str+="	</tr>                                                      ";
+	
+	cnt += 1; 
+	$('#add').append(str);
+})
+
+//행 삭제 
+function delRow(btn){
+	console.log(btn);
+	//특정 클래스를 COUNT하여 최소 입력 장치를 살려둠
+  	if($('.delete').length == 1)
+    {
+        alert("삭제할 수 없습니다.");
+    }else{
+    	btn.closest('tr').remove();//삭제
+    }
+};
+</script>
+
+
+
 <script type="text/javascript">
 CKEDITOR.replace('cont'); //CKEDITOR의 함수로 (괄호)안에는 ID,NAME이 들어간다
 </script>

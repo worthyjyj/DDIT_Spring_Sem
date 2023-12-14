@@ -177,6 +177,13 @@
 		    <artifactId>ojdbc6</artifactId>
 		    <version>11.2.0.4</version>
 		</dependency>
+		
+		<!-- 2023.12.14 개인 공부용 추가 mariadb-JDBC -->
+		<dependency>
+		    <groupId>org.mariadb.jdbc</groupId>
+		    <artifactId>mariadb-java-client</artifactId>
+		    <version>3.1.4</version>
+		</dependency>
 		<!-- Database 라이브러리 끝 -->
 		
 		<!-- tiles 시작 (jsp include 같은거..!)-->
