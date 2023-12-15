@@ -19,55 +19,84 @@
        <div class="card shadow mb-4">
            <div class="card-header py-3">
                <h6 class="m-0 font-weight-bold text-primary">DB데이터 가져오기</h6>
-               <input type="button" value="getData" style="margin-top:10px;"/>
            </div>
        </div>
 	</div>
 </div>
 
-${testVOList}
  <div id="jsGrid"></div>
  
  <script>
+ var getGridData;
+ 
 $(function() {
-
-    var clients = [
-        { "Name": "Otto Clay", "Age": 25, "Country": 1, "Address": "Ap #897-1459 Quam Avenue", "Married": false },
-        { "Name": "Connor Johnston", "Age": 45, "Country": 2, "Address": "Ap #370-4647 Dis Av.", "Married": true },
-        { "Name": "Lacey Hess", "Age": 29, "Country": 3, "Address": "Ap #365-8835 Integer St.", "Married": false },
-        { "Name": "Timothy Henson", "Age": 56, "Country": 1, "Address": "911-5143 Luctus Ave", "Married": true },
-        { "Name": "Ramona Benton", "Age": 32, "Country": 3, "Address": "Ap #614-689 Vehicula Street", "Married": false }
-    ];
-
-    var countries = [
-        { Name: "", Id: 0 },
-        { Name: "United States", Id: 1 },
-        { Name: "Canada", Id: 2 },
-        { Name: "United Kingdom", Id: 3 }
-    ];
-
-    $("#jsGrid").jsGrid({
-        width: "100%",
-        height: "400px",
-
-        inserting: true,
-        editing: true,
-        sorting: true,
-        paging: true,
-
-        data: clients,
-
-        fields: [
-            { name: "Name", type: "text", width: 150, validate: "required" },
-            { name: "Age", type: "number", width: 50 },
-            { name: "Address", type: "text", width: 200 },
-            { name: "Country", type: "select", items: countries, valueField: "Id", textField: "Name" },
-            { name: "Married", type: "checkbox", title: "Is Married", sorting: false },
-            { type: "control" }
-        ]
-    });
-
+	
+	//그리드에 뿌릴 데이터 먼저 가져오기
+	getGridData();
+	search();
+	
+	var btnSave = $(".jsgrid-update-button");
+	
+// 	console.log(btnSave);
+	
+	btnSave.on("click",function(){
+		console.log("오잉");
+	})
+	
 });
+
+function getGridData() {
+    $.ajax({
+        url: "/test/getGridData",
+        type: "post",
+        dataType: "json",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+        },
+        async: false,
+        success: function (result) {
+            getGridData = result;
+        }
+    });
+}
+
+function search(){
+
+
+console.log("getGridData >> ",getGridData);
+
+        //init 그리드
+	    $("#jsGrid").jsGrid({
+	        width: "100%",
+	        height: "400px",
+
+	        inserting: true,
+	        editing: true,
+	        sorting: true,
+	        paging: true,
+
+	        data: getGridData,
+
+	        fields: [
+	            { name: "reg_date", type: "text", width: 150, validate: "required" },
+	            { name: "reg_user", type: "text", width: 50 },
+	            { name: "title", type: "text", width: 200 },
+	            { name: "content", type: "text", width: 200 },
+	            { name: "seq", type: "text", title: "seq", sorting: false },
+	            { type: "control" }
+	        ],
+	        
+	        rowClick: function (args) {
+	        	var getData = args.item;
+	        	console.log("클릭이벤트 >> ", getData);
+	        	
+	        }
+	        
+	    });
+	    
+	    
+}
+
 </script>
 
 

@@ -57,8 +57,8 @@
 		pre-post-annotations="enabled" : PreAuthorize, PostAuthorize를 사용할 수 있게 됨
 		secured-annotations="enabled" : Secured를 사용할 수 있게 됨
 	-->
-	<security:global-method-security pre-post-annotations="enabled"
-	secured-annotations="enabled" />
+<!-- 	<security:global-method-security pre-post-annotations="enabled" -->
+<!-- 	secured-annotations="enabled" /> -->
 	
 	<context:component-scan base-package="kr.or.ddit" />
 	

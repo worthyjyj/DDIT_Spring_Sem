@@ -1,36 +1,20 @@
 package kr.or.ddit.controller;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
-import kr.or.ddit.service.LprodService;
 import kr.or.ddit.service.TestService;
-import kr.or.ddit.vo.AttachVO;
-import kr.or.ddit.vo.LprodVO;
-import kr.or.ddit.vo.TestVO;
 import lombok.extern.slf4j.Slf4j;
-import net.coobird.thumbnailator.Thumbnailator;
 
 
 /* Controller 어노테이션
@@ -58,7 +42,34 @@ public class TestController {
 		List<HashMap<String, Object>> testVOList = testService.getList();
 		
 		model.addAttribute("testVOList", testVOList);
+		
+		// List<HashMap<String, Object>>을 JSONArray로 변환
+        JSONArray jsonArray = new JSONArray();
+        for (HashMap<String, Object> data : testVOList) {
+            JSONObject jsonObject = new JSONObject(data);
+            jsonArray.add(jsonObject);
+        }
+
+        // JSONArray를 JSON 형태의 문자열로 변환
+        String jsonData = jsonArray.toJSONString();
+
+        // 변환된 JSON 데이터 출력
+        System.out.println("제발 나와라 >> "+jsonData);
+		
+        model.addAttribute("testVOListJSON",jsonData);
+        
 		return "test/create";
+	}
+	
+	@ResponseBody
+	@PostMapping("/getGridData")
+	public List<HashMap<String, Object>> getGridData() {
+		log.info("getGridData에 왔다");
+		
+		List<HashMap<String, Object>> testVOList = testService.getList();
+		log.info("testVOList : " + testVOList);
+		
+		return testVOList;
 	}
 	
 }

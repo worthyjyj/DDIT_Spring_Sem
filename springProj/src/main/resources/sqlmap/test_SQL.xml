@@ -8,12 +8,13 @@
 <mapper namespace="test">
 	
 	<select id="getlist" parameterType="hashMap"  resultType="Map">
-	    select 
-	     seq
+	  select 
+		CAST(seq AS char(10)) as seq 
 		,content
-		,reg_date
+		,CAST(date_format(reg_date,'%Y-%m-%d') AS char(100)) as reg_date
 		,reg_user
-		,title from board
+		,title 
+		from board
 	</select>
 	
 </mapper>
