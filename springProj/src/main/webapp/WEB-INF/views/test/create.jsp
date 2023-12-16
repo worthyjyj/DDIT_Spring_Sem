@@ -14,6 +14,12 @@
 <link type="text/css" rel="stylesheet" href="/resources/jsgrid/jsgrid-theme.min.css" />
 
 
+<!-- 리얼그리드 관련 파일 import -->
+ <script type="text/javascript" src="/resources/realgrid/realgrid-lic.js"></script>
+ <script type="text/javascript" src="/resources/realgrid/realgrid.2.7.2.min.js"></script>
+ <link href="/resources/realgrid/realgrid-style.css" rel="stylesheet" />
+
+
 <div class="row">
    <div class="col-xl-8 col-lg-7">
        <div class="card shadow mb-4">
@@ -25,25 +31,20 @@
 </div>
 
  <div id="jsGrid"></div>
+ <div id="realgrid"></div>
  
- <script>
- var getGridData;
  
-$(function() {
-	
-	//그리드에 뿌릴 데이터 먼저 가져오기
-	getGridData();
-	search();
-	
-	var btnSave = $(".jsgrid-update-button");
-	
-// 	console.log(btnSave);
-	
-	btnSave.on("click",function(){
-		console.log("오잉");
-	})
-	
-});
+ <style>
+  #realgrid {
+    width: 100%;
+    height: 440px;
+  }
+</style>
+
+
+<script>
+var getGridData;
+
 
 function getGridData() {
     $.ajax({
@@ -60,43 +61,95 @@ function getGridData() {
     });
 }
 
-function search(){
-
-
-console.log("getGridData >> ",getGridData);
-
-        //init 그리드
-	    $("#jsGrid").jsGrid({
-	        width: "100%",
-	        height: "400px",
-
-	        inserting: true,
-	        editing: true,
-	        sorting: true,
-	        paging: true,
-
-	        data: getGridData,
-
-	        fields: [
-	            { name: "reg_date", type: "text", width: 150, validate: "required" },
-	            { name: "reg_user", type: "text", width: 50 },
-	            { name: "title", type: "text", width: 200 },
-	            { name: "content", type: "text", width: 200 },
-	            { name: "seq", type: "text", title: "seq", sorting: false },
-	            { type: "control" }
-	        ],
-	        
-	        rowClick: function (args) {
-	        	var getData = args.item;
-	        	console.log("클릭이벤트 >> ", getData);
-	        	
-	        }
-	        
-	    });
-	    
-	    
-}
-
+  document.addEventListener('DOMContentLoaded', function () {
+    const container = document.getElementById('realgrid');
+    const provider = new RealGrid.LocalDataProvider(false);
+    const gridView = new RealGrid.GridView(container);
+    gridView.setDataSource(provider);
+    
+    
+    //필드 생성
+    provider.setFields([
+      {
+        fieldName: 'reg_date',
+        dataType: 'text',
+      },
+      {
+        fieldName: 'reg_user',
+        dataType: 'text',
+      },
+      {
+        fieldName: 'title',
+        dataType: 'text',
+      },
+      {
+        fieldName: 'content',
+        dataType: 'text',
+      },
+      {
+        fieldName: 'seq',
+        dataType: 'text',
+      },
+    ]);
+    
+    //컬럼 생성
+    gridView.setColumns([
+      {
+        name: 'reg_dateColumn',
+        fieldName: 'reg_date',
+        type: 'data',
+        width: '140',
+        header: {
+          text: '등록일자',
+        },
+      },
+      {
+        name: 'reg_userColumn',
+        fieldName: 'reg_user',
+        type: 'data',
+        width: '140',
+        header: {
+          text: '등록자',
+        },
+      },
+      {
+        name: 'titleColumn',
+        fieldName: 'title',
+        type: 'data',
+        width: '140',
+        header: {
+          text: '제목',
+        },
+      },
+      {
+        name: 'contentColumn',
+        fieldName: 'content',
+        type: 'data',
+        width: '140',
+        header: {
+          text: '내용',
+        },
+      },
+      {
+        name: 'seqColumn',
+        fieldName: 'seq',
+        type: 'data',
+        width: '140',
+        header: {
+          text: '등록키',
+        },
+      },
+    ]);
+    
+    getGridData();
+    
+    console.log("getGridData >> ",getGridData);
+    provider.fillJsonData(getGridData, { fillMode: "set" });
+  });
+  
+  
+ 
+  
 </script>
 
 
