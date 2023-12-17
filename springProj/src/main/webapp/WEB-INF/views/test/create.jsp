@@ -62,13 +62,33 @@ function getGridData() {
     });
 }
 
+
   document.addEventListener('DOMContentLoaded', function () {
     const container = document.getElementById('realgrid');
     const provider = new RealGrid.LocalDataProvider(false);
     const gridView = new RealGrid.GridView(container);
     gridView.setDataSource(provider);
     
+    gridView.setEditOptions({
+    	  insertable: true,
+    	  appendable: true
+    });
+
+    //해당 row 위에 삽입
+    function insertEmptyRow() {
+    	gridView.commit()
+  	  var row = gridView.getCurrent().dataRow;
+      provider.insertRow(row, {});
+//   	  gridView.showEditor(); //바로 편집기를 표시하고 싶을때
+  	}
     
+    //해당 row 아래 삽입
+   function btnBeginInsertRowShift() {
+	  var curr = gridView.getCurrent();
+	  gridView.beginInsertRow(Math.max(0, curr.itemIndex), true);
+	  //setTimeout(function(){gridView.showEditor();}, 10); //바로 편집기를 표시하고 싶을때
+	}
+
     //필드 생성
     provider.setFields([
       {
@@ -192,6 +212,13 @@ function getGridData() {
         
         if(index.fieldName == "cud"){
             console.log("CUD필드에다가 이제 c일경우, u일경우...등등 경우의 수를 만들어서 처리하기");
+            if(value == "C"){
+            	grid.commit();
+            	btnBeginInsertRowShift();
+
+            	// mes에서 어떻게 처리 했는지 확인하고 같은 방식으로 변경
+// 				provider.setValue(index.itemIndex,'cud','가');            	
+            }
         }
         
     };
