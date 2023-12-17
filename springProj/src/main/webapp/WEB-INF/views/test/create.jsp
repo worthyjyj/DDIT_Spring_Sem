@@ -32,6 +32,7 @@
 
  <div id="jsGrid"></div>
  <div id="realgrid"></div>
+ <pre id="resultViewer"></pre>
  
  
  <style>
@@ -71,6 +72,10 @@ function getGridData() {
     //필드 생성
     provider.setFields([
       {
+        fieldName: 'cud',
+        dataType: 'text',
+      },
+      {
         fieldName: 'reg_date',
         dataType: 'text',
       },
@@ -94,6 +99,32 @@ function getGridData() {
     
     //컬럼 생성
     gridView.setColumns([
+    	{
+    	    name: "cudColumn",
+    	    fieldName: "cud",
+    	    width: 70,
+    	    sortable: false,
+    	    lookupDisplay: true,
+    	    values: [
+    	        "C",
+    	        "R",
+    	        "U",
+    	        "D"
+    	    ],
+    	    labels: [
+    	    	"C",
+    	        "R",
+    	        "U",
+    	        "D"
+    	    ],
+    	    editor: {
+    	        type: "dropdown"
+    	    },
+    	    header: {
+    	        text: "CRUD",
+    	        styleName: "orange-column"
+    	    }
+    	  },
       {
         name: 'reg_dateColumn',
         fieldName: 'reg_date',
@@ -145,6 +176,27 @@ function getGridData() {
     
     console.log("getGridData >> ",getGridData);
     provider.fillJsonData(getGridData, { fillMode: "set" });
+    
+ // getRows 함수로 provider의 값 가져오기
+//     const rows = provider.getRows();
+//     document.getElementById('resultViewer').innerHTML = JSON.stringify(rows, 1);
+    
+ // getRows 함수로 provider의 값 가져오기
+    const rows = provider.getValues(0);
+    document.getElementById('resultViewer').innerHTML = JSON.stringify(rows);
+    
+    //CRUD 드롭박스 선택했을 때 이벤트 주기
+    gridView.onEditChange = function (grid, index, value) {
+        console.log("grid.onEditChange driven, " + index.column + ' at ' + index.dataRow + ' was replaced by value: ' + value);
+        console.log("index >> ", index);
+        
+        if(index.fieldName == "cud"){
+            console.log("CUD필드에다가 이제 c일경우, u일경우...등등 경우의 수를 만들어서 처리하기");
+        }
+        
+    };
+    
+    
   });
   
   
