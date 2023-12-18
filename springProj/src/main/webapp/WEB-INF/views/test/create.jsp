@@ -31,6 +31,7 @@
 </div>
 
  <div id="jsGrid"></div>
+ <div style="margin-bottom:10px;"><input type="button" value="저장" id="saveBtn"/></div>
  <div id="realgrid"></div>
  <pre id="resultViewer"></pre>
  
@@ -69,6 +70,9 @@ function getGridData() {
     const gridView = new RealGrid.GridView(container);
     gridView.setDataSource(provider);
     
+    //save 전용
+	provider_save = new RealGrid.LocalDataProvider(false);
+    
     gridView.setEditOptions({
     	  insertable: true,
     	  appendable: true
@@ -88,8 +92,101 @@ function getGridData() {
 	  gridView.beginInsertRow(Math.max(0, curr.itemIndex), true);
 	  //setTimeout(function(){gridView.showEditor();}, 10); //바로 편집기를 표시하고 싶을때
 	}
+    
+   function CUD(grid, itemIndex, dataRow, field ,dataProvider){
+	   var dataProvider = grid.getDataSource();
+	   var fieldName = dataProvider.getFieldName(field);
+	   var cudVal = grid.getValue(itemIndex, "cud");
+		
+		console.log("dataProvider  >> ",dataProvider);
+		console.log("field  >> ",field);
+		console.log("fieldName  >> ",fieldName);
+		console.log("cudVal  >> ",cudVal);
+
+		// 수정한 칼럼 인덱스를 구해서 focus 줘야됨
+		if( fieldName == "CUD" && cudVal == "C" ){
+			//행 추가를 위한 수정내역 취소.
+			grid.cancel();
+
+			// c 처리
+			var selectedRows = {};
+			selectedRows['cud'] = 'C';
+
+			// 맨 아랫줄은 itemIndex+1 사용안됨
+			if (dataProvider.getRowCount() == itemIndex+1) {    // 마지막줄 이면
+				//하위 행 추가.
+				// grid.beginInsertRow(itemIndex, true);
+				// grid.commit(true);
+				// grid.setValues(itemIndex+1, selectedRows);
+				// grid.setCurrent({ itemIndex: itemIndex+1 });
+				grid.setEditOptions({appendable: true}); //21.08.04 choms 이렇게 안하면 키보드로 행추가 가능함.
+				grid.beginAppendRow();
+				grid.setValues(itemIndex+1, selectedRows);
+				// grid.setCurrent({ itemIndex: itemIndex+1 });
+				grid.setEditOptions({appendable: false});
+				grid.commit(true);
+			} else {    // 마지막줄 아니면
+				//하위 행 추가.
+				grid.beginInsertRow(itemIndex+1, false);
+				grid.setValues(itemIndex+1, selectedRows);
+				grid.setCurrent({ itemIndex: itemIndex+1 });
+				grid.commit(true);
+			}
+
+		}else if ( fieldName == "CUD" && cudVal == "R" ){
+			//행 추가를 위한 수정내역 취소.
+			grid.cancel();
+
+			//r 처리 행 데이터복사 처리
+			var selectedRows = grid.getValues(itemIndex);
+			selectedRows['cud'] = 'C';
+
+			// 맨 아랫줄은 itemIndex+1 사용안됨
+			if (dataProvider.getRowCount() == itemIndex+1) {    // 마지막줄 이면
+				//하위 행 추가.
+				// grid.beginInsertRow(itemIndex, true);
+				// grid.commit(true);
+				// grid.setValues(itemIndex+1, selectedRows);
+				// grid.setCurrent({ itemIndex: itemIndex+1 });
+				grid.setEditOptions({appendable: true}); //21.08.04 choms 이렇게 안하면 키보드로 행추가 가능함.
+				grid.beginAppendRow();
+				grid.setValues(itemIndex+1, selectedRows);
+				grid.setCurrent({ itemIndex: itemIndex+1 });
+				grid.setEditOptions({appendable: false});
+				grid.commit(true);
+			} else {    // 마지막줄 아니면
+				//하위 행 추가.
+				grid.beginInsertRow(itemIndex+1, false);
+				grid.setValues(itemIndex+1, selectedRows);
+				grid.setCurrent({ itemIndex: itemIndex+1 });
+				grid.commit(true);
+			}
+
+		}else if ( fieldName == "CUD" && cudVal == "D" ){
+			grid.commit();
+			grid.setValue(itemIndex, 'cud', 'D');
+		}else if ( fieldName == "CUD" && cudVal == "" ){
+			grid.commit();
+			if( $.inArray(dataRow, dataProvider.getStateRows('created')) > -1  ){
+				dataProvider.removeRow(dataRow);
+			}else{
+				dataProvider.setRowState(dataRow, 'none', true);
+			}
+		}else{
+			grid.commit();
+			//CUD 이외의 행에서 값이 변경되었을때  CUD - U 처리
+			if( cudVal != 'C' && cudVal != 'D'){
+				grid.setValue(itemIndex, 'cud', 'U');
+			}else if(cudVal == 'D'){
+
+			}else{
+				grid.setValue(itemIndex, 'cud', 'C');
+			}
+		}
+	}
 
     //필드 생성
+    // ※ 앞으로 필드명은 대문자로 작성할 것..
     provider.setFields([
       {
         fieldName: 'cud',
@@ -117,6 +214,34 @@ function getGridData() {
       },
     ]);
     
+    //저장용 필드 생성
+    provider_save.setFields([
+        {
+            fieldName: 'cud',
+            dataType: 'text',
+          },
+          {
+            fieldName: 'reg_date',
+            dataType: 'text',
+          },
+          {
+            fieldName: 'reg_user',
+            dataType: 'text',
+          },
+          {
+            fieldName: 'title',
+            dataType: 'text',
+          },
+          {
+            fieldName: 'content',
+            dataType: 'text',
+          },
+          {
+            fieldName: 'seq',
+            dataType: 'text',
+          },
+        ]);
+    
     //컬럼 생성
     gridView.setColumns([
     	{
@@ -126,12 +251,14 @@ function getGridData() {
     	    sortable: false,
     	    lookupDisplay: true,
     	    values: [
+    	    	"",
     	        "C",
     	        "R",
     	        "U",
     	        "D"
     	    ],
     	    labels: [
+    	    	"",
     	    	"C",
     	        "R",
     	        "U",
@@ -189,6 +316,7 @@ function getGridData() {
         header: {
           text: '등록키',
         },
+//         editable: false,
       },
     ]);
     
@@ -206,22 +334,73 @@ function getGridData() {
     document.getElementById('resultViewer').innerHTML = JSON.stringify(rows);
     
     //CRUD 드롭박스 선택했을 때 이벤트 주기
-    gridView.onEditChange = function (grid, index, value) {
-        console.log("grid.onEditChange driven, " + index.column + ' at ' + index.dataRow + ' was replaced by value: ' + value);
-        console.log("index >> ", index);
-        
-        if(index.fieldName == "cud"){
-            console.log("CUD필드에다가 이제 c일경우, u일경우...등등 경우의 수를 만들어서 처리하기");
-            if(value == "C"){
-            	grid.commit();
-            	btnBeginInsertRowShift();
+    gridView.onCellEdited = function (grid, itemIndex, dataRow, field ) {
+		CUD(grid, itemIndex, dataRow, field ,provider);
+	};
+    
+    
+    // 저장 process
+    $("#saveBtn").on("click",function(){
+    	    var conf = confirm('저장하시겠습니까?');
+    	    
+    		if(conf){
+    			gridView.commit();
+      			try {
+    	  				gridView.commit();
+    	  				
+    	  				var editArr = new Array();
+    	  				//이거 뭔지 이해안감....
+    	  				//어쨌든 CRUD를 실행한 행의 인덱스를 반환함
+    	  				editArr = provider.getStateRows('created').concat(provider.getStateRows('updated'), provider.getStateRows('deleted'));
+    	  				editArr = editArr.filter(Number.isFinite);
+    	  				var saveArr = new Array();
+    	  				var jsonData;
+    	  				
+    	  				console.log("editArr >> ",editArr);
+    	  				
+    	  				for (var i = 0; i < editArr.length; i++) {
+    	  					jsonData = provider.getJsonRow(editArr[i]);
+    							  					
+    	  					saveArr.push(jsonData);
+    	  				}
+    	  			 	if (editArr.length == 0) {
+    	  			 		alert('변경사항이 없습니다.');
+    	  				} else {
+    		  						provider_save.fillJsonData([], {fillMode:'set'});
+    		  						
+    		  						console.log("saveArr >> ",saveArr);
+    		  						
+    		  						//저장 ajax 호출 
+    		  						// post로 보내는데 405 method 오류 발생
+    		  						// DELETE 안됨
+    		  						$.ajax({
+    		  							url: "/test/saveData",
+    		  							contentType:"application/json;charset=utf-8",
+    		  							type: "post",
+    		  							data: JSON.stringify(saveArr),
+    		  							dataType: "json",
+    		  							beforeSend: function (xhr) {
+    		  					            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+    		  					        },
+    		  					        async: false,
+    		  					        success: function(result){
+    		  					        	console.log(result);
+    		  					        	if(result == "success"){
+    		  					        		location.reload();
+    		  					        	}
+    		  					        	
+    		  					        }
+    		  						})
 
-            	// mes에서 어떻게 처리 했는지 확인하고 같은 방식으로 변경
-// 				provider.setValue(index.itemIndex,'cud','가');            	
-            }
-        }
-        
-    };
+    	  				} 
+
+    			} catch (e) {
+    				console.error(e);
+    			} finally {
+    			}
+    		}
+    	})
+    
     
     
   });

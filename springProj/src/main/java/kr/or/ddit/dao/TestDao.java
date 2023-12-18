@@ -24,6 +24,18 @@ public class TestDao {
 		//.selectone() : 1행(상세보기)
 		//.selectList("namespace.id", 파라미터) : 여러행(목록)
 		return this.sqlSessionTemplate.selectList("test.getlist"); 
+	}
+
+	public int saveCreate(Map<String, Object> map) {
+		return this.sqlSessionTemplate.insert("test.saveCreate",map);
+	}
+
+	public int saveUpdate(Map<String, Object> map) {
+		return this.sqlSessionTemplate.update("test.saveUpdate",map);
+	}
+
+	public int saveDelete(Map<String, Object> map) {
+		return this.sqlSessionTemplate.update("test.saveDelete",map);
 	} 
 	
 }

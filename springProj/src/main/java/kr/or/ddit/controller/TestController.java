@@ -2,6 +2,7 @@ package kr.or.ddit.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -71,6 +73,24 @@ public class TestController {
 		
 		return testVOList;
 	}
+	
+	
+	@PostMapping("/saveData")
+	public String saveData(@RequestBody List<Map<String,Object>> list) {
+		log.info("saveData에 왔다");
+		log.info("list : " + list);
+		
+		String message = "";
+		
+		message = testService.saveData(list);
+		
+		log.info("message >> ",message);
+		return message;
+	}
+	
+	
+	
+	
 	
 }
 

@@ -17,4 +17,24 @@
 		from board
 	</select>
 	
+	
+	<insert id="saveCreate" parameterType="hashMap">
+	  INSERT INTO board
+		(content, del_date, del_yn, mod_date, reg_date, reg_user, title)
+	  VALUES(#{content}, NULL, 'N', NULL, #{reg_date}, #{reg_user}, #{title})
+	</insert>
+	
+	<update id="saveUpdate" parameterType="hashMap">
+		UPDATE board
+		SET    title=#{title},
+		       reg_date=#{reg_date},
+		       reg_user=#{reg_user},
+		       content=#{content}
+		WHERE  seq = #{seq}
+	</update>
+	
+	<delete id="saveDelete" parameterType="hashMap">
+	   DELETE * FROM board WHERE seq = #{seq}
+	</delete>
+	
 </mapper>
