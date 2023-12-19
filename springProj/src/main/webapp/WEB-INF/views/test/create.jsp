@@ -34,10 +34,15 @@
  <div style="margin-bottom:10px;"><input type="button" value="저장" id="saveBtn"/></div>
  <div id="realgrid"></div>
  <pre id="resultViewer"></pre>
+ <div id="realgrid2"></div>
  
  
  <style>
   #realgrid {
+    width: 100%;
+    height: 440px;
+  }
+  #realgrid2 {
     width: 100%;
     height: 440px;
   }
@@ -74,6 +79,19 @@ function getGridData() {
 	provider_save = new RealGrid.LocalDataProvider(false);
     
     gridView.setEditOptions({
+    	  insertable: true,
+    	  appendable: true
+    });
+    
+    //realgrid2 작성
+    const container2 = document.getElementById('realgrid2');
+	const provider2 = new RealGrid.LocalDataProvider(false);
+	const gridView2 = new RealGrid.GridView(container2);
+    gridView2.setDataSource(provider2);
+    
+    console.log("gridView2 >> ",gridView2);
+    
+    gridView2.setEditOptions({
     	  insertable: true,
     	  appendable: true
     });
@@ -214,6 +232,46 @@ function getGridData() {
       },
     ]);
     
+    //grid2 field명 작성
+    provider2.setFields([
+        {
+          fieldName: 'withme_no',
+          dataType: 'text',
+        },
+        {
+          fieldName: 'file_name',
+          dataType: 'text',
+        },
+        {
+          fieldName: 'incruit_edate',
+          dataType: 'text',
+        },
+        {
+          fieldName: 'incruit_no',
+          dataType: 'text',
+        },
+        {
+          fieldName: 'incruit_ssts',
+          dataType: 'text',
+        },
+        {
+          fieldName: 'user_name',
+          dataType: 'text',
+        },
+        {
+          fieldName: 'withme_content',
+          dataType: 'text',
+        },
+        {
+          fieldName: 'withme_hit',
+          dataType: 'text',
+        },
+        {
+          fieldName: 'withme_title',
+          dataType: 'text',
+        },
+      ]);
+    
     //저장용 필드 생성
     provider_save.setFields([
         {
@@ -320,11 +378,104 @@ function getGridData() {
       },
     ]);
     
+    
+    // 그리드2 컬럼 생성
+    gridView2.setColumns([
+      {
+        name: 'withme_noColumn',
+        fieldName: 'withme_no',
+        type: 'data',
+        width: '80',
+        header: {
+          text: '고유번호',
+        },
+      },
+      {
+        name: 'file_nameColumn',
+        fieldName: 'file_name',
+        type: 'data',
+        width: '140',
+        header: {
+          text: '파일명',
+        },
+      },
+      {
+        name: 'incruit_edateColumn',
+        fieldName: 'incruit_edate',
+        type: 'data',
+        width: '140',
+        header: {
+          text: '날짜',
+        },
+      },
+      {
+        name: 'incruit_noColumn',
+        fieldName: 'incruit_no',
+        type: 'data',
+        width: '100',
+        header: {
+          text: '등록키',
+        },
+      },
+      {
+        name: 'incruit_sstsColumn',
+        fieldName: 'incruit_ssts',
+        type: 'data',
+        width: '140',
+        header: {
+          text: '상태',
+        },
+      },
+      {
+        name: 'user_nameColumn',
+        fieldName: 'user_name',
+        type: 'data',
+        width: '140',
+        header: {
+          text: '작성자',
+        },
+      },
+      {
+        name: 'withme_contentColumn',
+        fieldName: 'withme_content',
+        type: 'data',
+        width: '140',
+        header: {
+          text: '작성내용',
+        },
+      },
+      {
+        name: 'withme_hitColumn',
+        fieldName: 'withme_hit',
+        type: 'data',
+        width: '140',
+        header: {
+          text: '조회수',
+        },
+      },
+      {
+        name: 'withme_titleColumn',
+        fieldName: 'withme_title',
+        type: 'data',
+        width: '140',
+        header: {
+          text: '게시글제목',
+        },
+      },
+    ]);
+    
     getGridData();
     
     console.log("getGridData >> ",getGridData);
     provider.fillJsonData(getGridData, { fillMode: "set" });
     
+    //첫번째 ROW 자동 선택
+	gridView.setCurrent({dataRow: 0});
+	gridView.onCellClicked(gridView,{itemIndex: 0, dataRow : 0 , cellType : 'data'});
+    gridView.onCellClicked = function (grid, clickData) {
+     console.log("clickData >> ",clickData);
+     console.log("clickData >> ",clickData);
+}
  // getRows 함수로 provider의 값 가져오기
 //     const rows = provider.getRows();
 //     document.getElementById('resultViewer').innerHTML = JSON.stringify(rows, 1);
@@ -371,24 +522,21 @@ function getGridData() {
     		  						console.log("saveArr >> ",saveArr);
     		  						
     		  						//저장 ajax 호출 
-    		  						// post로 보내는데 405 method 오류 발생
-    		  						// DELETE 안됨
     		  						$.ajax({
     		  							url: "/test/saveData",
     		  							contentType:"application/json;charset=utf-8",
     		  							type: "post",
     		  							data: JSON.stringify(saveArr),
-    		  							dataType: "json",
+    		  							dataType: "text",
     		  							beforeSend: function (xhr) {
     		  					            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
     		  					        },
     		  					        async: false,
     		  					        success: function(result){
-    		  					        	console.log(result);
+    		  					        	console.log("result >> ",result);
     		  					        	if(result == "success"){
     		  					        		location.reload();
     		  					        	}
-    		  					        	
     		  					        }
     		  						})
 

@@ -34,7 +34,7 @@
 	</update>
 	
 	<delete id="saveDelete" parameterType="hashMap">
-	   DELETE * FROM board WHERE seq = #{seq}
+	   DELETE FROM board WHERE seq = #{seq}
 	</delete>
 	
 </mapper>

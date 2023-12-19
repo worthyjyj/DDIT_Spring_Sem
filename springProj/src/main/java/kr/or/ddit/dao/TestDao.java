@@ -35,7 +35,7 @@ public class TestDao {
 	}
 
 	public int saveDelete(Map<String, Object> map) {
-		return this.sqlSessionTemplate.update("test.saveDelete",map);
+		return this.sqlSessionTemplate.delete("test.saveDelete",map);
 	} 
 	
 }

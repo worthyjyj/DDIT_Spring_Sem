@@ -74,7 +74,7 @@ public class TestController {
 		return testVOList;
 	}
 	
-	
+	@ResponseBody
 	@PostMapping("/saveData")
 	public String saveData(@RequestBody List<Map<String,Object>> list) {
 		log.info("saveData에 왔다");
