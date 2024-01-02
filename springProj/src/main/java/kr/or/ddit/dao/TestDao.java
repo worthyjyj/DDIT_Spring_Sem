@@ -36,6 +36,10 @@ public class TestDao {
 
 	public int saveDelete(Map<String, Object> map) {
 		return this.sqlSessionTemplate.delete("test.saveDelete",map);
+	}
+
+	public List<HashMap<String, Object>> getGrid2Data(Map<String, Object> param) {
+		return this.sqlSessionTemplate.selectList("test.getGrid2Data",param); 
 	} 
 	
 }

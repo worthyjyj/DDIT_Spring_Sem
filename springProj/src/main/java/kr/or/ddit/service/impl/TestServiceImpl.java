@@ -59,5 +59,10 @@ public class TestServiceImpl implements TestService {
 		
 		return message;
 	}
+
+	@Override
+	public List<HashMap<String, Object>> getGrid2Data(Map<String, Object> param) {
+		return this.testDao.getGrid2Data(param); 
+	}
 	
 	}

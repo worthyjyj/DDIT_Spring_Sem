@@ -10,5 +10,7 @@ public interface TestService {
 
 	public String saveData(List<Map<String, Object>> list);
 
+	public List<HashMap<String, Object>> getGrid2Data(Map<String, Object> param);
+
 	
 }

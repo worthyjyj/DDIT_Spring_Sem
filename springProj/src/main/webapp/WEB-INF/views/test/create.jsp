@@ -77,6 +77,7 @@ function getGridData() {
     
     //save 전용
 	provider_save = new RealGrid.LocalDataProvider(false);
+	provider_save.setFields(provider_save);
     
     gridView.setEditOptions({
     	  insertable: true,
@@ -120,6 +121,7 @@ function getGridData() {
 		console.log("field  >> ",field);
 		console.log("fieldName  >> ",fieldName);
 		console.log("cudVal  >> ",cudVal);
+		console.log("itemIndex  >> ",itemIndex);
 
 		// 수정한 칼럼 인덱스를 구해서 focus 줘야됨
 		if( fieldName == "CUD" && cudVal == "C" ){
@@ -194,7 +196,8 @@ function getGridData() {
 			grid.commit();
 			//CUD 이외의 행에서 값이 변경되었을때  CUD - U 처리
 			if( cudVal != 'C' && cudVal != 'D'){
-				grid.setValue(itemIndex, 'cud', 'U');
+				console.log("오잉");
+				gridView.setValue(itemIndex, 'cud', 'U');
 			}else if(cudVal == 'D'){
 
 			}else{
@@ -296,6 +299,42 @@ function getGridData() {
           },
           {
             fieldName: 'seq',
+            dataType: 'text',
+          },
+          {
+            fieldName: 'withme_no',
+            dataType: 'text',
+          },
+          {
+            fieldName: 'file_name',
+            dataType: 'text',
+          },
+          {
+            fieldName: 'incruit_edate',
+            dataType: 'text',
+          },
+          {
+            fieldName: 'incruit_no',
+            dataType: 'text',
+          },
+          {
+            fieldName: 'incruit_ssts',
+            dataType: 'text',
+          },
+          {
+            fieldName: 'user_name',
+            dataType: 'text',
+          },
+          {
+            fieldName: 'withme_content',
+            dataType: 'text',
+          },
+          {
+            fieldName: 'withme_hit',
+            dataType: 'text',
+          },
+          {
+            fieldName: 'withme_title',
             dataType: 'text',
           },
         ]);
@@ -469,23 +508,59 @@ function getGridData() {
     console.log("getGridData >> ",getGridData);
     provider.fillJsonData(getGridData, { fillMode: "set" });
     
-    //첫번째 ROW 자동 선택
-	gridView.setCurrent({dataRow: 0});
-	gridView.onCellClicked(gridView,{itemIndex: 0, dataRow : 0 , cellType : 'data'});
-    gridView.onCellClicked = function (grid, clickData) {
-     console.log("clickData >> ",clickData);
-     console.log("clickData >> ",clickData);
-}
- // getRows 함수로 provider의 값 가져오기
-//     const rows = provider.getRows();
-//     document.getElementById('resultViewer').innerHTML = JSON.stringify(rows, 1);
+    // 그리드2 데이터 조회 
+	gridView.onCellClicked = function (grid, clickData) {
+		console.log("clickData >> ",clickData);
+		
+		//seq 뽑아내기 
+		var seq = provider.getValue(clickData.dataRow,"SEQ");
+		
+		var param = { "seq" : seq };
+		
+		console.log("param >> ",param);
+		
+		$.ajax({
+			url: "/test/getGrid2Data",
+			contentType: "application/json;charset=utf-8",
+			type: "post",
+			data: JSON.stringify(param),
+			dataType: "json",
+			beforeSend: function (xhr) {
+		       xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+		    },
+		    async: false,
+		    success: function(result){
+		    	console.log("result >> ",result);
+		    	
+		    	provider2.fillJsonData(result, { fillMode: "set" });
+		    	
+		    	gridView2.commit(true);
+		    	
+		    }
+		})
+		
+	};
     
+    //첫번째 ROW 자동 선택
+	gridView.setCurrent({dataRow: 0, fieldName : 'SEQ'});
+	gridView.onCellClicked(gridView,{itemIndex: 0, dataRow : 0 , cellType : 'data'});
+    
+	
  // getRows 함수로 provider의 값 가져오기
     const rows = provider.getValues(0);
     document.getElementById('resultViewer').innerHTML = JSON.stringify(rows);
     
     //CRUD 드롭박스 선택했을 때 이벤트 주기
     gridView.onCellEdited = function (grid, itemIndex, dataRow, field ) {
+		CUD(grid, itemIndex, dataRow, field ,provider);
+	};
+	
+	
+	//그리드2 데이터 수정했을 때 부모 그리드1 의 CRUD U로 변경해주기
+    gridView2.onCellEdited = function (grid, itemIndex, dataRow, field ) {
+		 console.log("뭐냐 >> ",gridView.getCurrent().itemIndex);
+		 itemIndex = gridView.getCurrent().itemIndex;
+		 // 부모 그리드에 CRUD "U" 표시해주기
 		CUD(grid, itemIndex, dataRow, field ,provider);
 	};
     
@@ -499,6 +574,8 @@ function getGridData() {
       			try {
     	  				gridView.commit();
     	  				
+    	  				provider_save.clearRows();
+    	  				
     	  				var editArr = new Array();
     	  				//이거 뭔지 이해안감....
     	  				//어쨌든 CRUD를 실행한 행의 인덱스를 반환함
@@ -509,36 +586,59 @@ function getGridData() {
     	  				
     	  				console.log("editArr >> ",editArr);
     	  				
-    	  				for (var i = 0; i < editArr.length; i++) {
-    	  					jsonData = provider.getJsonRow(editArr[i]);
-    							  					
-    	  					saveArr.push(jsonData);
-    	  				}
+    	  				
     	  			 	if (editArr.length == 0) {
     	  			 		alert('변경사항이 없습니다.');
     	  				} else {
+    	  					
+    	  					for (var i = 0; i < editArr.length; i++) {
+    	  						
+    	  						var values = ["","","","","",
+					                  "","","","","","","","","",""];
+    	  						
+								provider_save.addRow(values);
+								
+								// 일단 선택된 그리드1에 있는 데이터 넣어주기
+// 								var curIndex = gridView.getCurrent().itemIndex;
+								
+								provider_save.setValue(i,"cud",provider.getValue(editArr[i],"cud"));
+								provider_save.setValue(i,"reg_date",provider.getValue(editArr[i],"reg_date"));
+								provider_save.setValue(i,"reg_user",provider.getValue(editArr[i],"reg_user"));
+								provider_save.setValue(i,"title",provider.getValue(editArr[i],"title"));
+								provider_save.setValue(i,"seq",provider.getValue(editArr[i],"seq"));
+								
+        	  					saveArr.push(provider_save.getJsonRow(i));
+        	  					
+        	  					// 이부분에서 막힘
+        	  					// 저장할 때 그리드 2에 있는 데이터를 넣어야하는데 이거 어떻게 넣어야하는지 모르겠음,,,,
+// 								if(provider.getValue(editArr[i],"cud") == "U"){
+// 	        	  					jsonData = provider2.getJsonRow(0);
+// 	        	  					saveArr.push(jsonData);
+// 								}
+        	  				
+        	  					}
     		  						provider_save.fillJsonData([], {fillMode:'set'});
     		  						
     		  						console.log("saveArr >> ",saveArr);
     		  						
-    		  						//저장 ajax 호출 
-    		  						$.ajax({
-    		  							url: "/test/saveData",
-    		  							contentType:"application/json;charset=utf-8",
-    		  							type: "post",
-    		  							data: JSON.stringify(saveArr),
-    		  							dataType: "text",
-    		  							beforeSend: function (xhr) {
-    		  					            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-    		  					        },
-    		  					        async: false,
-    		  					        success: function(result){
-    		  					        	console.log("result >> ",result);
-    		  					        	if(result == "success"){
-    		  					        		location.reload();
-    		  					        	}
-    		  					        }
-    		  						})
+//     		  						저장 ajax 호출 
+//     		  						$.ajax({
+//     		  							url: "/test/saveData",
+//     		  							contentType:"application/json;charset=utf-8",
+//     		  							type: "post",
+//     		  							data: JSON.stringify(saveArr),
+//     		  							dataType: "text",
+//     		  							beforeSend: function (xhr) {
+//     		  					            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+//     		  					        },
+//     		  					        async: false,
+//     		  					        success: function(result){
+//     		  					        	console.log("result >> ",result);
+//     		  					        	if(result == "success"){
+//     		  					        		location.reload();
+//     		  					        	}
+//     		  					        }
+//     		  						})
 
     	  				} 
 

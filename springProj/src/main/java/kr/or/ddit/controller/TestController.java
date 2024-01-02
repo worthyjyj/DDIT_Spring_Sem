@@ -89,6 +89,17 @@ public class TestController {
 	}
 	
 	
+	@ResponseBody
+	@PostMapping("/getGrid2Data")
+	public List<HashMap<String, Object>> getGrid2Data(@RequestBody Map<String,Object> param) {
+		log.info("/getGrid2Data에 왔다");
+		
+		List<HashMap<String, Object>> grid2DataList = testService.getGrid2Data(param);
+		log.info("testVOList : " + grid2DataList);
+		
+		return grid2DataList;
+	}
+	
 	
 	
 	

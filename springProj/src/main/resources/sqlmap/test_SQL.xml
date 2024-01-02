@@ -37,4 +37,20 @@
 	   DELETE FROM board WHERE seq = #{seq}
 	</delete>
 	
+	
+	<select id="getGrid2Data" parameterType="hashMap"  resultType="Map">
+	  select 
+			cast(withme_no as char(10)) as withme_no,
+			file_name,
+			cast(date_format(incruit_edate,'%Y-%m-%d') as char(100)) as incruit_edate,
+			incruit_no,
+			incruit_ssts,
+			user_name,
+			withme_content,
+			withme_hit,
+			withme_title 
+		from withme
+	    where incruit_no = #{seq}
+	</select>
+	
 </mapper>
