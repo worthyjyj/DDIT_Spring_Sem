@@ -579,6 +579,7 @@ function getGridData() {
     	  				var editArr = new Array();
     	  				//이거 뭔지 이해안감....
     	  				//어쨌든 CRUD를 실행한 행의 인덱스를 반환함
+    	  				// 저장시, CRUD는 한개씩만 가능함
     	  				editArr = provider.getStateRows('created').concat(provider.getStateRows('updated'), provider.getStateRows('deleted'));
     	  				editArr = editArr.filter(Number.isFinite);
     	  				var saveArr = new Array();
@@ -605,22 +606,30 @@ function getGridData() {
 								provider_save.setValue(i,"reg_date",provider.getValue(editArr[i],"reg_date"));
 								provider_save.setValue(i,"reg_user",provider.getValue(editArr[i],"reg_user"));
 								provider_save.setValue(i,"title",provider.getValue(editArr[i],"title"));
+								provider_save.setValue(i,"content",provider.getValue(editArr[i],"content"));
 								provider_save.setValue(i,"seq",provider.getValue(editArr[i],"seq"));
 								
-        	  					saveArr.push(provider_save.getJsonRow(i));
         	  					
-        	  					// 이부분에서 막힘
-        	  					// 저장할 때 그리드 2에 있는 데이터를 넣어야하는데 이거 어떻게 넣어야하는지 모르겠음,,,,
-// 								if(provider.getValue(editArr[i],"cud") == "U"){
-// 	        	  					jsonData = provider2.getJsonRow(0);
-// 	        	  					saveArr.push(jsonData);
-// 								}
+								if(provider.getValue(editArr[i],"cud") == "U"){
+									provider_save.setValue(i,"withme_no",provider2.getValue(i,"withme_no"));
+									provider_save.setValue(i,"file_name",provider2.getValue(i,"file_name"));
+									provider_save.setValue(i,"incruit_edate",provider2.getValue(i,"incruit_edate"));
+									provider_save.setValue(i,"incruit_no",provider2.getValue(i,"incruit_no"));
+									provider_save.setValue(i,"incruit_ssts",provider2.getValue(i,"incruit_ssts"));
+									provider_save.setValue(i,"user_name",provider2.getValue(i,"user_name"));
+									provider_save.setValue(i,"withme_content",provider2.getValue(i,"withme_content"));
+									provider_save.setValue(i,"withme_hit",provider2.getValue(i,"withme_hit"));
+									provider_save.setValue(i,"withme_title",provider2.getValue(i,"withme_title"));
+								}
         	  				
+								saveArr.push(provider_save.getJsonRow(i));
+								
         	  					}
     		  						provider_save.fillJsonData([], {fillMode:'set'});
     		  						
     		  						console.log("saveArr >> ",saveArr);
     		  						
+    		  						//저장하는 것 부터 손보면 될 것 같음.. 그냥 U일때 테이블 데이터 수정해주는 쿼리 추가해주면 될 듯.
 //     		  						저장 ajax 호출 
 //     		  						$.ajax({
 //     		  							url: "/test/saveData",
