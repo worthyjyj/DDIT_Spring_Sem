@@ -532,9 +532,43 @@ function getGridData() {
 		    success: function(result){
 		    	console.log("result >> ",result);
 		    	
+		    	if(result.length > 0){
+		    		
 		    	provider2.fillJsonData(result, { fillMode: "set" });
-		    	
 		    	gridView2.commit(true);
+		    	
+		    	}else{
+		    		console.log("데이터 length >> ", result.length);
+		    		// 데이터가 없을 경우 임의의 값(0)을 세팅한다. 
+		    			
+		    		provider2.setRows([
+		    			  {
+		    				withme_no: '1',
+		    				file_name: '남',
+		    				incruit_edate: '2001-01-01',
+// 		    			    Phone: '(025)6563-2802',
+// 		    			    ProductId: '198160731-00008',
+// 		    			    KorCountry: '모잠비크',
+// 		    			    OrderDate: '2021-01-16',
+// 		    			    CardNumber: '5587-2139-9692-3644',
+// 		    			    Monetary: 'EUR',
+// 		    			    StartDate: '2018-02-25',
+// 		    			    EndDate: '2021-08-12',
+// 		    			    ToMonth: '23',
+// 		    			    Month: '41',
+// 		    			    Year: '3',
+// 		    			    InterestRate: '0.15',
+// 		    			    SaveCost: '51000',
+// 		    			    SaveMaturity: '14950650',
+// 		    			    CurrentSave: '9304950',
+// 		    			    Rating: '5',
+// 		    			    BusinessProficiency: '59',
+// 		    			    Address: '서울특별시 강서구 공항동 45-89',
+		    			  },
+		    			]);
+		    
+		    	}
+		    	
 		    	
 		    }
 		})
@@ -609,7 +643,9 @@ function getGridData() {
 								provider_save.setValue(i,"content",provider.getValue(editArr[i],"content"));
 								provider_save.setValue(i,"seq",provider.getValue(editArr[i],"seq"));
 								
-        	  					
+        	  					// 만약 그리드2의 내용을 수정하지 않고 그리드 1만을 수정한다고 했을 때 
+        	  					// 없는 그리드 2를 수정하려고 하니까 여기서 bounds 에러가 남.
+        	  					// 근데 이건 내가 걱정할게 아닌게 원래대로 였으면 그리드2에 무조건 데이터가 넣어져 있어야함. 
 								if(provider.getValue(editArr[i],"cud") == "U"){
 									provider_save.setValue(i,"withme_no",provider2.getValue(i,"withme_no"));
 									provider_save.setValue(i,"file_name",provider2.getValue(i,"file_name"));
