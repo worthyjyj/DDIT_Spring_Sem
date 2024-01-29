@@ -32,6 +32,21 @@
 
  <div id="jsGrid"></div>
  <div style="margin-bottom:10px;"><input type="button" value="저장" id="saveBtn"/></div>
+ <!-- 검색조건 시작  -->
+ <div>
+	<table border="1">
+	<tr><!-- 첫번째 줄 시작 -->
+	    <td>등록키[콤보박스]</td>
+	    <td><select><option selected>롸 아무거나 일단 적어봄</option></select></td>
+	    <td>제목</td>
+	    <td><input type="text" /></td>
+	    <td>날짜</td>
+	    <td><input type="date" /> ~ <input type="date" /></td>
+	    <td><input type="button" value="조회"/></td>
+	</tr><!-- 첫번째 줄 끝 -->
+    </table>
+ </div>
+ <!-- 검색조건 끝  -->
  <div id="realgrid"></div>
  <pre id="resultViewer"></pre>
  <div id="realgrid2"></div>
@@ -46,6 +61,7 @@
     width: 100%;
     height: 440px;
   }
+  
 </style>
 
 
