@@ -68,6 +68,11 @@
 <script>
 var getGridData;
 
+// init combo (등록키 콤보 박스 콤보 데이터 가져오기)
+
+
+
+
 
 function getGridData() {
     $.ajax({
