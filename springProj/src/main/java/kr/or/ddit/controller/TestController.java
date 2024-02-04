@@ -101,7 +101,16 @@ public class TestController {
 	}
 	
 	
-	
+	@ResponseBody
+	@PostMapping("/getComboData")
+	public List<HashMap<String, Object>> getComboData() {
+		log.info("getComboData에 왔다");
+		
+		List<HashMap<String, Object>> result = testService.getComboData();
+		log.info("result : " + result);
+		
+		return result;
+	}
 	
 }
 

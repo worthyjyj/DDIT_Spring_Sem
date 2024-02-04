@@ -12,5 +12,7 @@ public interface TestService {
 
 	public List<HashMap<String, Object>> getGrid2Data(Map<String, Object> param);
 
+	public List<HashMap<String, Object>> getComboData();
+
 	
 }

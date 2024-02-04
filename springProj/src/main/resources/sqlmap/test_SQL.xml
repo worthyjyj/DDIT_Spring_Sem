@@ -53,4 +53,11 @@
 	    where incruit_no = #{seq}
 	</select>
 	
+	
+	<select id="getComboData" parameterType="hashMap"  resultType="Map">
+		select cd_item 
+			   ,cd_item_nm 
+			from cmm_code
+	</select>
+	
 </mapper>

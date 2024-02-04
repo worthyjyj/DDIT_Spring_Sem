@@ -64,5 +64,11 @@ public class TestServiceImpl implements TestService {
 	public List<HashMap<String, Object>> getGrid2Data(Map<String, Object> param) {
 		return this.testDao.getGrid2Data(param); 
 	}
+
+	@Override
+	public List<HashMap<String, Object>> getComboData() {
+		
+		return this.testDao.getComboData(); 
+	}
 	
 	}

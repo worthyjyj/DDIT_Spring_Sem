@@ -37,7 +37,8 @@
 	<table border="1">
 	<tr><!-- 첫번째 줄 시작 -->
 	    <td>등록키[콤보박스]</td>
-	    <td><select><option selected>롸 아무거나 일단 적어봄</option></select></td>
+	    <td><select id="combo">
+	    </select></td>
 	    <td>제목</td>
 	    <td><input type="text" /></td>
 	    <td>날짜</td>
@@ -68,8 +69,35 @@
 <script>
 var getGridData;
 
-// init combo (등록키 콤보 박스 콤보 데이터 가져오기)
 
+// init combo (등록키 콤보 박스 콤보 데이터 가져오기)
+getComboData();
+
+
+function getComboData() {
+    $.ajax({
+        url: "/test/getComboData",
+        type: "post",
+        dataType: "json",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+        },
+        async: false,
+        success: function (result) {
+        	console.log("combo result >> ", result);
+        	$("#combo").empty();
+        	
+        	// 셀렉트 박스에 옵션값 html로 채워주기
+        	vhtml = "<option> </option>"; 
+        	for(var i=0; i<result.length ; i++){
+	        	vhtml += "<option value="+result[i].cd_item+">"+result[i].cd_item_nm+"</option>"; 
+        	}
+        	
+        	
+        	$("#combo").append(vhtml);
+        }
+    });
+}
 
 
 
@@ -524,6 +552,8 @@ function getGridData() {
       },
     ]);
     
+    
+    // 검색 조건 세팅 후 그리드 조회 하도록 기능 추가하기!!! 여기서부터!! 
     getGridData();
     
     console.log("getGridData >> ",getGridData);

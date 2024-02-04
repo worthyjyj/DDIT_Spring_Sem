@@ -40,6 +40,10 @@ public class TestDao {
 
 	public List<HashMap<String, Object>> getGrid2Data(Map<String, Object> param) {
 		return this.sqlSessionTemplate.selectList("test.getGrid2Data",param); 
+	}
+
+	public List<HashMap<String, Object>> getComboData() {
+		return this.sqlSessionTemplate.selectList("test.getComboData"); 
 	} 
 	
 }
