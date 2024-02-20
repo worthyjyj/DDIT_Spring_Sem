@@ -15,6 +15,7 @@
 		,reg_user
 		,title 
 		from board
+<!-- 		<if test="keyword!=null and keyword!=''"></if> -->
 	</select>
 	
 	

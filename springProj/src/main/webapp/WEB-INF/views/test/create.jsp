@@ -37,13 +37,13 @@
 	<table border="1">
 	<tr><!-- 첫번째 줄 시작 -->
 	    <td>등록키[콤보박스]</td>
-	    <td><select id="combo">
+	    <td><select id="schParam1">
 	    </select></td>
 	    <td>제목</td>
-	    <td><input type="text" /></td>
+	    <td><input type="text" id="schParam2" /></td>
 	    <td>날짜</td>
-	    <td><input type="date" /> ~ <input type="date" /></td>
-	    <td><input type="button" value="조회"/></td>
+	    <td><input type="date" id="schParam3"/> ~ <input type="date" id="schParam4" /></td>
+	    <td><input type="button" id="schBtn" value="조회"/></td>
 	</tr><!-- 첫번째 줄 끝 -->
     </table>
  </div>
@@ -85,7 +85,7 @@ function getComboData() {
         async: false,
         success: function (result) {
         	console.log("combo result >> ", result);
-        	$("#combo").empty();
+        	$("#schParam1").empty();
         	
         	// 셀렉트 박스에 옵션값 html로 채워주기
         	vhtml = "<option> </option>"; 
@@ -94,7 +94,7 @@ function getComboData() {
         	}
         	
         	
-        	$("#combo").append(vhtml);
+        	$("#schParam1").append(vhtml);
         }
     });
 }
@@ -103,6 +103,22 @@ function getComboData() {
 
 
 function getGridData() {
+	
+	// 검색 조건 파라미터 생성 (JSON 파라미터)
+	// 일단 검색 조건이 없으면 ''으로도 검색되는지 확인해보기 
+	// 되면 쿼리 수정해보고 안되면 @뭐 이런거 써서 파라미터 있으면  이거 써서 하는걸로 쿼리 수정해야할 듯 .
+	// 일단 쿼리 수정해보고 파라미터 같이 보내서 데이터 받아오기
+	
+	// 파라미터 세팅
+	var param = {
+		"seq" : $("#schParam1").val(), 
+		"title" : $("#schParam2").val(), 
+		"sdate" : $("#schParam3").val(),
+		"edate" : $("#schParam4").val()
+	}
+	
+	console.log("param >> ", param);
+	
     $.ajax({
         url: "/test/getGridData",
         type: "post",
@@ -553,11 +569,16 @@ function getGridData() {
     ]);
     
     
-    // 검색 조건 세팅 후 그리드 조회 하도록 기능 추가하기!!! 여기서부터!! 
+    // 검색 조건 세팅 후 그리드 조회
     getGridData();
     
     console.log("getGridData >> ",getGridData);
     provider.fillJsonData(getGridData, { fillMode: "set" });
+    
+    // 아니 왜 이게 함수 인식을 못하지....?
+    $("#schBtn").on("click",function(){
+	    getGridData();
+    })
     
     // 그리드2 데이터 조회 
 	gridView.onCellClicked = function (grid, clickData) {
