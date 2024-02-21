@@ -43,7 +43,7 @@
 	    <td><input type="text" id="schParam2" /></td>
 	    <td>날짜</td>
 	    <td><input type="date" id="schParam3"/> ~ <input type="date" id="schParam4" /></td>
-	    <td><input type="button" id="schBtn" value="조회"/></td>
+	    <td><input type="button" id="schBtn" value="조회" /></td>
 	</tr><!-- 첫번째 줄 끝 -->
     </table>
  </div>
@@ -67,13 +67,53 @@
 
 
 <script>
+
 var getGridData;
+const container = document.getElementById('realgrid');
+const provider = new RealGrid.LocalDataProvider(false);
+const gridView = new RealGrid.GridView(container);
+gridView.setDataSource(provider);
 
+$(document).ready(function(){
 
-// init combo (등록키 콤보 박스 콤보 데이터 가져오기)
-getComboData();
-
-
+	// init combo (등록키 콤보 박스 콤보 데이터 가져오기)
+	getComboData();
+	
+	$("#schBtn").on("click",function(){
+		console.log("자장면")
+		
+		// 아니 대체 왜 이게 안먹는거냐,,,,,,,, 미취겠네 
+		var param = {
+			"seq" : $("#schParam1").val(), 
+			"title" : $("#schParam2").val(), 
+			"sdate" : $("#schParam3").val(),
+			"edate" : $("#schParam4").val()
+		}
+		
+		console.log("param >> ", param);
+		
+	    $.ajax({
+	        url: "/test/getGridData",
+	        type: "post",
+	        dataType: "json",
+	        beforeSend: function (xhr) {
+	            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	        },
+	        async: false,
+	        success: function (result) {
+	            getGridData = result;
+	            
+	            console.log("ㅋㅋㅋㅋ츼킨");
+	            provider.fillJsonData(getGridData, { fillMode: "set" });
+	        }
+	    });
+	})
+	
+	// 검색 조건 세팅 후 그리드 조회
+    getGridData();
+    console.log("getGridData >> ",getGridData);
+   
+	
 function getComboData() {
     $.ajax({
         url: "/test/getComboData",
@@ -129,16 +169,20 @@ function getGridData() {
         async: false,
         success: function (result) {
             getGridData = result;
+            
+            console.log("ㅋㅋㅋㅋ츼킨");
+            provider.fillJsonData(getGridData, { fillMode: "set" });
         }
     });
 }
 
+}); // document.ready() 끝
 
   document.addEventListener('DOMContentLoaded', function () {
-    const container = document.getElementById('realgrid');
-    const provider = new RealGrid.LocalDataProvider(false);
-    const gridView = new RealGrid.GridView(container);
-    gridView.setDataSource(provider);
+//     const container = document.getElementById('realgrid');
+//     const provider = new RealGrid.LocalDataProvider(false);
+//     const gridView = new RealGrid.GridView(container);
+//     gridView.setDataSource(provider);
     
     //save 전용
 	provider_save = new RealGrid.LocalDataProvider(false);
@@ -569,16 +613,48 @@ function getGridData() {
     ]);
     
     
-    // 검색 조건 세팅 후 그리드 조회
-    getGridData();
-    
-    console.log("getGridData >> ",getGridData);
-    provider.fillJsonData(getGridData, { fillMode: "set" });
-    
-    // 아니 왜 이게 함수 인식을 못하지....?
-    $("#schBtn").on("click",function(){
-	    getGridData();
-    })
+//     $("#schBtn").on("click",function(){
+    	
+//     	getGridData();
+    	
+//     	function getGridData() {
+    		
+//     		// 검색 조건 파라미터 생성 (JSON 파라미터)
+//     		// 일단 검색 조건이 없으면 ''으로도 검색되는지 확인해보기 
+//     		// 되면 쿼리 수정해보고 안되면 @뭐 이런거 써서 파라미터 있으면  이거 써서 하는걸로 쿼리 수정해야할 듯 .
+//     		// 일단 쿼리 수정해보고 파라미터 같이 보내서 데이터 받아오기
+    		
+//     		// 파라미터 세팅
+//     		var param = {
+//     			"seq" : $("#schParam1").val(), 
+//     			"title" : $("#schParam2").val(), 
+//     			"sdate" : $("#schParam3").val(),
+//     			"edate" : $("#schParam4").val()
+//     		}
+    		
+//     		console.log("param >> ", param);
+    		
+//     	    $.ajax({
+//     	        url: "/test/getGridData",
+//     	        type: "post",
+//     	        dataType: "json",
+//     	        beforeSend: function (xhr) {
+//     	            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+//     	        },
+//     	        async: false,
+//     	        success: function (result) {
+//     	            getGridData = result;
+    	            
+//     	            console.log("getGridData >> ",getGridData);
+//     	            provider.fillJsonData(getGridData, { fillMode: "set" });
+//     	        }
+//     	    });
+//     	}
+    	
+    	
+    	
+//     })
+   
     
     // 그리드2 데이터 조회 
 	gridView.onCellClicked = function (grid, clickData) {
@@ -770,8 +846,6 @@ function getGridData() {
     
   });
   
-  
- 
   
 </script>
 
