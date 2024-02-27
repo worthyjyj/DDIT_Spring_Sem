@@ -15,7 +15,16 @@
 		,reg_user
 		,title 
 		from board
-<!-- 		<if test="keyword!=null and keyword!=''"></if> -->
+		WHERE 1=1
+		<if test="seq!=null and seq!=''">
+		AND seq = #{seq}
+		</if>
+		<if test="title!=null and title!=''">
+		AND title LIKE concat('%',#{title},'%') 
+		</if>
+		<if test="sdate!=null and sdate!='' and edate!=null and edate!=''">
+		AND date_format(reg_date,'%Y-%m-%d') between date_format(#{sdate},'%Y-%m-%d') and date_format(#{edate},'%Y-%m-%d')
+		</if>
 	</select>
 	
 	

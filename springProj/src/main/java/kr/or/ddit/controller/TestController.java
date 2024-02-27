@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.service.TestService;
@@ -41,34 +42,35 @@ public class TestController {
 	public String create(Model model) {
 		log.info("/test/create");
 		
-		List<HashMap<String, Object>> testVOList = testService.getList();
+//		List<HashMap<String, Object>> testVOList = testService.getList();
 		
-		model.addAttribute("testVOList", testVOList);
+//		model.addAttribute("testVOList", testVOList);
 		
 		// List<HashMap<String, Object>>을 JSONArray로 변환
-        JSONArray jsonArray = new JSONArray();
-        for (HashMap<String, Object> data : testVOList) {
-            JSONObject jsonObject = new JSONObject(data);
-            jsonArray.add(jsonObject);
-        }
+//        JSONArray jsonArray = new JSONArray();
+//        for (HashMap<String, Object> data : testVOList) {
+//            JSONObject jsonObject = new JSONObject(data);
+//            jsonArray.add(jsonObject);
+//        }
 
         // JSONArray를 JSON 형태의 문자열로 변환
-        String jsonData = jsonArray.toJSONString();
+//        String jsonData = jsonArray.toJSONString();
 
         // 변환된 JSON 데이터 출력
-        System.out.println("제발 나와라 >> "+jsonData);
+//        System.out.println("제발 나와라 >> "+jsonData);
 		
-        model.addAttribute("testVOListJSON",jsonData);
+//        model.addAttribute("testVOListJSON",jsonData);
         
 		return "test/create";
 	}
 	
 	@ResponseBody
 	@PostMapping("/getGridData")
-	public List<HashMap<String, Object>> getGridData() {
+	public List<HashMap<String, Object>> getGridData(@RequestBody Map<String, Object> paramMap) {
 		log.info("getGridData에 왔다");
 		
-		List<HashMap<String, Object>> testVOList = testService.getList();
+		List<HashMap<String, Object>> testVOList = testService.getList(paramMap);
+		log.info("paramMap : " + paramMap);
 		log.info("testVOList : " + testVOList);
 		
 		return testVOList;

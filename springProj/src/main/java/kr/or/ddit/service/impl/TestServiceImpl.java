@@ -24,8 +24,8 @@ public class TestServiceImpl implements TestService {
 	TestDao testDao;
 
 	@Override
-	public List<HashMap<String, Object>> getList() {
-		 return this.testDao.getList(); 
+	public List<HashMap<String, Object>> getList(Map<String, Object> paramMap) {
+		 return this.testDao.getList(paramMap); 
 	}
 
 	//Data CURD 처리

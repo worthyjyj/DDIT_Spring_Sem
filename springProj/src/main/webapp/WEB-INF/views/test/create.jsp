@@ -94,8 +94,10 @@ $(document).ready(function(){
 		
 	    $.ajax({
 	        url: "/test/getGridData",
+	        contentType: "application/json;charset=utf-8",
 	        type: "post",
 	        dataType: "json",
+	        data: JSON.stringify(param),
 	        beforeSend: function (xhr) {
 	            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
 	        },
@@ -103,7 +105,7 @@ $(document).ready(function(){
 	        success: function (result) {
 	            getGridData = result;
 	            
-	            console.log("ㅋㅋㅋㅋ츼킨");
+	            console.log("ㅋㅋㅋㅋ츼킨>> ", result);
 	            provider.fillJsonData(getGridData, { fillMode: "set" });
 	        }
 	    });
@@ -117,6 +119,7 @@ $(document).ready(function(){
 function getComboData() {
     $.ajax({
         url: "/test/getComboData",
+        contentType: "application/json;charset=utf-8",
         type: "post",
         dataType: "json",
         beforeSend: function (xhr) {
@@ -161,10 +164,12 @@ function getGridData() {
 	
     $.ajax({
         url: "/test/getGridData",
+        contentType: "application/json;charset=utf-8",
         type: "post",
+        data: JSON.stringify(param),
         dataType: "json",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+        xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
         },
         async: false,
         success: function (result) {

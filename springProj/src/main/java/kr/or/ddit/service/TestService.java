@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface TestService {
 
-	public List<HashMap<String, Object>> getList();
+	public List<HashMap<String, Object>> getList(Map<String, Object> paramMap);
 
 	public String saveData(List<Map<String, Object>> list);
 
