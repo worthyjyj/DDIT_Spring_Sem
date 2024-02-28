@@ -42,25 +42,6 @@ public class TestController {
 	public String create(Model model) {
 		log.info("/test/create");
 		
-//		List<HashMap<String, Object>> testVOList = testService.getList();
-		
-//		model.addAttribute("testVOList", testVOList);
-		
-		// List<HashMap<String, Object>>을 JSONArray로 변환
-//        JSONArray jsonArray = new JSONArray();
-//        for (HashMap<String, Object> data : testVOList) {
-//            JSONObject jsonObject = new JSONObject(data);
-//            jsonArray.add(jsonObject);
-//        }
-
-        // JSONArray를 JSON 형태의 문자열로 변환
-//        String jsonData = jsonArray.toJSONString();
-
-        // 변환된 JSON 데이터 출력
-//        System.out.println("제발 나와라 >> "+jsonData);
-		
-//        model.addAttribute("testVOListJSON",jsonData);
-        
 		return "test/create";
 	}
 	
@@ -112,6 +93,14 @@ public class TestController {
 		log.info("result : " + result);
 		
 		return result;
+	}
+	
+	
+	@GetMapping("/crtPrac")
+	public String crtPrac(Model model) {
+		log.info("/test/crtPrac");
+		
+		return "test/crtPrac";
 	}
 	
 }
