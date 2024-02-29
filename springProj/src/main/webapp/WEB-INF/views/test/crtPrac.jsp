@@ -251,6 +251,8 @@ $(function() {
 			$(".overlay").show();
 			try {
 
+				//조회부터 저장까지 해보고 혹시 탭 추가해서 하는거나 아니면 차트도 해보까..
+				// 개발 공부 힘써야디.. 후
 				this.searchCond = $( '#div_form_LINVEN017 ' ).serializeJson();
 				HTGF.Api.get(url, this.searchCond).then( function(resData) {
 					// grid 관련
