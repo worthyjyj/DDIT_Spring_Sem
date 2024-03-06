@@ -103,6 +103,46 @@ public class TestController {
 		return "test/crtPrac";
 	}
 	
+	@ResponseBody
+	@PostMapping("/getCrtData")
+	public List<HashMap<String, Object>> getCrtData(@RequestBody Map<String, Object> paramMap) {
+		log.info("getCrtData에 왔다");
+		log.info(" getCrtData paramMap : " + paramMap);
+		
+		List<HashMap<String, Object>> getCrtData = testService.getCrtData(paramMap);
+		log.info("getCrtData : " + getCrtData);
+		
+		return getCrtData;
+	}
+	
+	
+	@ResponseBody
+	@PostMapping("/getCrtCombo")
+	public List<HashMap<String, Object>> getCrtCombo(@RequestBody Map<String, Object> paramMap) {
+		log.info("getCrtCombo에 왔다");
+		
+		List<HashMap<String, Object>> getCrtCombo = testService.getCrtCombo(paramMap);
+		log.info("paramMap : " + paramMap);
+		log.info("testVOList : " + getCrtCombo);
+		
+		return getCrtCombo;
+	}
+	
+	// 저장 
+	@ResponseBody
+	@PostMapping("/saveCrtData")
+	public HashMap<String, Object> saveCrtData(@RequestBody List<HashMap<String, Object>> paramList) {
+		log.info("saveCrtData에 왔다");
+		log.info("paramList : " + paramList);
+		
+		HashMap<String, Object> message = testService.saveCrtData(paramList);
+		
+		System.out.println("메시지 >> "+message.get("message"));
+		
+		
+		return message;
+	}
+	
 }
 
 

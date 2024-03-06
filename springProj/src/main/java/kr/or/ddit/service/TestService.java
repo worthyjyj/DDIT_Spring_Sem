@@ -14,5 +14,11 @@ public interface TestService {
 
 	public List<HashMap<String, Object>> getComboData();
 
+	public List<HashMap<String, Object>> getCrtData(Map<String, Object> paramMap);
+
+	public List<HashMap<String, Object>> getCrtCombo(Map<String, Object> paramMap);
+
+	public HashMap<String, Object> saveCrtData(List<HashMap<String, Object>> paramList);
+
 	
 }

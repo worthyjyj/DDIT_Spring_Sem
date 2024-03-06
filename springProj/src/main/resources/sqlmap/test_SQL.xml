@@ -70,4 +70,48 @@
 			from cmm_code
 	</select>
 	
+	<select id="getCrtData" parameterType="hashMap"  resultType="Map">
+	  select CRT_CD
+			,CRT_NM
+			,CRT_SSTS
+			,CRT_DTM
+			,CRT_CNT
+			from crtprac
+			where 1=1
+		<if test="crt_ssts!=null and crt_ssts!=''">
+		AND CRT_SSTS = #{crt_ssts}
+		</if>
+		<if test="crt_cd!=null and crt_cd!=''">
+		AND CRT_CD like CONCAT('%',#{crt_cd},'%')
+		</if>
+	</select>
+	
+	<select id="getCrtCombo" parameterType="hashMap"  resultType="Map">
+	select cd_no
+		,cd_item
+		,cd_item_nm
+		,cd_group
+		from cmm_code 
+		where 1=1
+		and cd_group = #{cd_group} 
+	</select>
+	
+	<insert id="crtCreate" parameterType="hashMap">
+	  INSERT INTO crtprac
+		(CRT_CD, CRT_NM,CRT_SSTS,CRT_DTM)
+	  VALUES(#{CRT_CD},#{CRT_NM},#{CRT_SSTS},#{CRT_DTM})
+	</insert>
+	
+	<update id="crtUpdate" parameterType="hashMap">
+		UPDATE crtprac 
+		SET    CRT_NM=#{CRT_NM},
+		       CRT_SSTS=#{CRT_SSTS},
+		       CRT_DTM=#{CRT_DTM}
+		WHERE  CRT_CD = #{CRT_CD}
+	</update>
+	
+	<delete id="crtDelete" parameterType="hashMap">
+	   DELETE FROM crtprac WHERE CRT_CD = #{CRT_CD}
+	</delete>
+	
 </mapper>

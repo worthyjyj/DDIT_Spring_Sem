@@ -1,13 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
 <!-- 제이쿼리 파일 import -->
 <script type="text/javascript" src="/resources/js/jquery-3.6.0.js"></script>
+<!-- JSON JS 파일 import -->
+<script type="text/javascript" src="/resources/js/jquery.serializejson.js"></script>
 
 <!-- front basic css 파일 import -->
 <link rel="stylesheet" type="text/css" href="/resources/css/front.css" />
 <!-- MESUtil JS 파일 import -->
 <script type="text/javascript" src="/resources/js/mes_common.js"></script>
+
+<!-- <script type="text/javascript"  src="/resources/js/moment.min.js"></script> -->
+
+<!-- ag차트 import -->
+ <script type="text/javascript" src="/resources/js/ag-charts-community-8.2.1.min.js"></script>
 
 <!-- 리얼그리드 관련 파일 import -->
  <script type="text/javascript" src="/resources/realgrid/realgrid-lic.js"></script>
@@ -20,12 +29,12 @@
 		<h2 class="title itype1" >운반구 조회 및 등록</h2>
 	</div>
 	<div class="btnbox fr">
-		<a href="javascript:void(0);" data-fc-auth="w" class="btn-ix" onclick="LINVEN017.save();"><span class="txt">저장</span></a>
-		<a href="javascript:void(0);" data-fc-auth="r" class="btn-ix" onclick="LINVEN017.search();"><span class="txt">조회</span></a>
+		<a href="javascript:void(0);" data-fc-auth="w" class="btn-ix" onclick="crtPrac.save();"><span class="txt">저장</span></a>
+		<a href="javascript:void(0);" data-fc-auth="r" class="btn-ix" onclick="crtPrac.search();"><span class="txt">조회</span></a>
 	</div>
 </div>
 
-<div class="contPage-search searchSHWrap" id="div_form_LINVEN017">
+<div class="contPage-search searchSHWrap" id="div_form_crtPrac">
 	<div class="border-box searchReq-box">
 		<div class="searchReq-tablebox">
 			<table>
@@ -44,13 +53,13 @@
 					<th><span class="label-dot">운반 상태</span></th>
 					<td>
 						<div style="width: calc(100% - 50px)">
-							<select class="select1" id="fac_cd" name="fac_cd" style="width: 100%;"></select>
+							<select class="select1" id="crt_ssts" name="crt_ssts" style="width: 100%;"></select>
 						</div>
 					</td>
 					<th><span class="label-dot">운반구</span></th>
 					<td>
 						<div style="width: calc(100% - 50px)">
-							<input type="text" class="input1" id="crt_cd" name="crt_cd" style="width: 100%;"/>
+							<input type="text" class="crt_cd" id="crt_cd" name="crt_cd" value="" style="width: 100%;"/>
 						</div>
 					</td>
 <!-- 					<th><span class="label-dot">RF-ID No</span></th> -->
@@ -68,9 +77,20 @@
 
 <div class="contPage-body">
 	<div class="base-list table-list">
-		<div id="realgrid0" style="width: 100%; height: 100%;"></div>
+		<div id="realgrid0"></div>
+		<div id="chart0" style="width: 40%; height: 55%; float: left"></div>
+	   	<div id="chart1" style="width: 60%; height: 55%; float: left; " ></div>
 	</div>
 </div>
+
+ <style>
+  #realgrid0 {
+    width: 100%;
+    height: 300px;
+  }
+  
+</style>
+
 
 <script>
 // 1. 전역변수 및 그리드 field, column 정의
@@ -90,7 +110,8 @@ fields[i] = [
 	, {fieldName:'CRT_CD'              }
 	, {fieldName:'CRT_NM'              }
 	, {fieldName:'CRT_SSTS'            }
-	, {fieldName:'CRT_DTM'   , dataType:"datetime", datetimeFormat:'yyyyMMddHHmmss'  } //String 타입으로 데이터 받아오고 화면에는 날짜 형식으로 출력하기 위해
+	, {fieldName:'CRT_DTM'   , dataType:"text", datetimeFormat:'yyyyMMddHHmmss'  } //String 타입으로 데이터 받아오고 화면에는 날짜 형식으로 출력하기 위해
+	, {fieldName:'CRT_CNT' , dataType : 'number' } 
 ];
 
 columns[i] = [
@@ -99,7 +120,8 @@ columns[i] = [
 		styleCallback: styleCallback	}
 	, {name:'CRT_NM',              fieldName:'CRT_NM',              type:'data', width:150, header:'운반구 이름', 			editable:true, 	sortable:true	}
 	, {name:'CRT_SSTS',            fieldName:'CRT_SSTS',            type:'data', width:150, header:'운반구 상태', 			editable:true, 	sortable:true	}
-	, {name:'CRT_DTM',             fieldName:'CRT_DTM',           type:'data', width:80, 	header:'운반 일시',	editable:true, 	sortable:true, 	lookupDisplay: true, datetimeFormat:'yyyy-MM-dd HH:mm:ss'	}
+	, {name:'CRT_DTM',             fieldName:'CRT_DTM',           type:'data', width:80, 	header:'운반 일시',	editable:false, 	sortable:true, 	lookupDisplay: true, textFormat:'([0-9]{4})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})$;$1-$2-$3 $4:$5:$6'	}
+	, {name:'CRT_CNT',             fieldName:'CRT_CNT',           type:'data', width:80, 	header:'운반 개수',	editable:false, 	sortable:true, 	lookupDisplay: true , numberFormat: "#,##0" 	}
 ];
 
 layout[i] = [
@@ -108,6 +130,7 @@ layout[i] = [
 	, 'CRT_NM'
 	, 'CRT_SSTS'
 	, 'CRT_DTM'
+	, 'CRT_CNT'
 ];
 
 //CUD할 때 editable 할 수 있도록 callback 처리
@@ -222,11 +245,41 @@ $(function() {
 
 		, initCombo : function() {
 			// 검색 조건에 있는 콤보박스에 데이터 넣기
-			// 이런식으로 해서 데이터 넣고 조회 때리는 식으로 해야할 듯
+			
+			// 운반 상태 combo
+			var param = {
+			"cd_group" : "crt_ssts" 
+		    }
+        
+           $.ajax({
+               url: "/test/getCrtCombo",
+               contentType: "application/json;charset=utf-8",
+               type: "post",
+               data: JSON.stringify(param),
+               dataType: "json",
+               beforeSend: function (xhr) {
+               xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+               },
+               async: false,
+               success: function (result) {
+                   console.log("combo result >> ", result);
+                   
+                   //select box에 옵션 세팅해주기
+                   var option = "<option value=''>&nbsp;</option>"
+                   
+                   if(result.length > 0){
+						for(var i = 0; i < result.length; i++){
+							option += "<option value='"+result[i].cd_item+"'>"+result[i].cd_item_nm+"</option>"
+						}
+                   }
+                   
+                   $("#crt_ssts").html(option);
+               }
+           });
 			
 			
-			// 공장
-// 			MES_UTIL.L_gfn_GetMasCdCombo( 'fac_cd' , 'C040' , 'BLANK' , 1 , LINVEN017.callback );
+			
+			crtPrac.search();
 
 		}
 
@@ -240,38 +293,52 @@ $(function() {
 		}
 
 		, search : function() {
-			var idx = 0;
 
-			var url = "${pageContext.request.contextPath}/api/LINVEN017/LINVEN017_SEARCH0";
-			if(PLT_CD == "JP" || PLT_CD == "HP"){
-				url = "${pageContext.request.contextPath}/api/LINVEN017/LINVEN017_SEARCH1";
-			}
+		// 리스트 그리드
+		$(".overlay").show();
 
-			// 리스트 그리드
-			$(".overlay").show();
-			try {
+        // 파라미터 세팅
+//         this.searchCond = $( '#div_form_crtPrac' ).serializeJson(); serializeJson 함수가 안됨;
+        
+		var param = {
+			"crt_ssts" : $("#crt_ssts").val(), 
+			"crt_cd" : $("#crt_cd").val()
+		    }
+        
+       	console.log("param >> ", param);
+       	
+           $.ajax({
+               url: "/test/getCrtData",
+               contentType: "application/json;charset=utf-8",
+               type: "post",
+               data: JSON.stringify(param),
+               dataType: "json",
+               beforeSend: function (xhr) {
+               xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+               },
+               async: false,
+               success: function (result) {
+                   $(".overlay").hide();
+                   
+                   var getCrtData = result;
+                   
+                   console.log("그리드 데이터 >> ", getCrtData);
+                   
+                   if(result.length > 0){
+                	   // 그리드 세팅
+	                   provider[0].fillJsonData(getCrtData, { fillMode: "set" });
+	                   
+                	   //원형 차트 함수 호출 
+                	   chart0(getCrtData);
+                	   
+                	   //라인형 차트 함수 호출
+                	   chart1(getCrtData);
+	                   
+                   }
+                   
+               }
+           });
 
-				//조회부터 저장까지 해보고 혹시 탭 추가해서 하는거나 아니면 차트도 해보까..
-				// 개발 공부 힘써야디.. 후
-				this.searchCond = $( '#div_form_LINVEN017 ' ).serializeJson();
-				HTGF.Api.get(url, this.searchCond).then( function(resData) {
-					// grid 관련
-					provider[idx].fillJsonData(resData.result,{fillMode: "set"} );
-
-					//그리드 progressbar 숨기기
-					$(".overlay").hide();
-
-					// 시간 타이머
-					FOOTER.setTimer(resData.timer);
-
-				}).catch(function(e) {
-				    if (e.status !== 400) return msg_alert('${menuId}', 'Server Error', '', I18('#확인'));
-				})
-
-			} catch (e) {
-				console.error(e);
-			} finally {
-			}
 
 		}
 		, save : function() {
@@ -284,57 +351,47 @@ $(function() {
 				gridedit  = gridedit.filter(Number.isFinite);
 				for(var i=0 ; i < gridedit.length ; i++){
 					var obj = provider[idx].getJsonRow(gridedit[i]);
-					if (obj.CUD == "C" || obj.CUD == "U") {
-						if (!MES_UTIL.isNull(obj.CRT_TAG_NO_1)) {
-							if( PLT_CD == 'CP' || PLT_CD == 'IP' || PLT_CD == 'TP' ){
-								if (obj.CRT_TAG_NO_1.length != 16){
-									msg_alert('${menuId}' ,I18('#RF-ID는_16_자리여야_합니다!')  , '' ,I18('#확인') );
-									return false;
-								}
-							}else{
-								if (obj.CRT_TAG_NO_1.length != 10){
-									msg_alert('${menuId}' ,I18('#RF-ID는_10_자리여야_합니다!')  , '' ,I18('#확인') );
-									return false;
-								}
-							}
-						}
-						if (!MES_UTIL.isNull(obj.CRT_TAG_NO_2)) {
-							if( PLT_CD == 'CP' || PLT_CD == 'IP' || PLT_CD == 'TP' ){
-								if (obj.CRT_TAG_NO_2.length != 16){
-									msg_alert('${menuId}' ,I18('#RF-ID는_16_자리여야_합니다!')  , '' ,I18('#확인') );
-									return false;
-								}
-							}else{
-								if (obj.CRT_TAG_NO_2.length != 10){
-									msg_alert('${menuId}' ,I18('#RF-ID는_10_자리여야_합니다!')  , '' ,I18('#확인') );
-									return false;
-								}
-							}
-						}
-					}
+				    
 					saveArr.push(obj);
 				}
 
 				if(gridedit.length == 0){
-					msg_alert('${menuId}' ,I18('#변경사항이_없습니다.')  , '' ,I18('#확인') );
+					alert('변경사항이 없습니다.');
 				}else{
 
-					// 필수체크
-					// if (!MES_UTIL.gridKeyCheck(gridView[idx], provider[idx], gridedit, ["SPEC_CD"])) {
-					// 	return false;
-					// }
+					console.log("저장 데이터 >> ", saveArr);
 					$(".overlay").show();
-					var url = '/api/LINVEN017/LINVEN017_SAVE';
-					var sParam = {};
-					HTGF.Api.post(url, saveArr, sParam).then( function(resData) {
-						
-						$(".overlay").hide();
-						save_alert('${menuId}', I18('#데이터_처리에_성공했습니다.'), resData.resultCode, resData.resultMessage, I18('#확인'), 'LINVEN017.search()');
-													
-					}).catch(function(e) {
-					    if (e.status !== 400) return msg_alert('${menuId}', 'Server Error', '', I18('#확인'));
-					})
+					
+					
+					  $.ajax({
+			               url: "/test/saveCrtData",
+			               contentType: "application/json;charset=utf-8",
+			               type: "post",
+			               data: JSON.stringify(saveArr),
+			               dataType: "json",
+			               beforeSend: function (xhr) {
+			               xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+			               },
+			               async: false,
+			               success: function (result) {
+			                   $(".overlay").hide();
+			                   
+			                   console.log("저장 후 return 값 >> ", result);
+			                   
+			                   if(result.message > 0){
+								   $(".overlay").hide();
+								   
+			                	   alert("정상적으로 처리되었습니다.");
+			                	   
+			                	   crtPrac.search();
+			                   }
+			                   
+			                   
+			               }
+			           });
 
+					
+					
 				}
 
 			} catch (e) {
@@ -347,8 +404,93 @@ $(function() {
 
 });
 
+// 원형 차트
+var chart0 = function(data){
+
+	$("#chart0").empty();
+
+	console.log("차트 데이터 >> ", data);
+	
+	//문자로 넘어온 데이터 값 숫자로 변환해주기
+	for(var i=0; i<data.length; i++){
+	  data[i].CRT_CNT = Number(data[i].CRT_CNT)	
+	}
+	
+	console.log("숫자로 변환한 차트 데이터 >> ", data);
+	
+	const options = {
+		    container: document.getElementById('chart0'),
+		    series: [
+		        {
+		            data: data,
+		            type: 'pie',
+		            calloutLabelKey: 'CRT_CD',
+		            angleKey: 'CRT_CNT',    
+		            sectorLabelKey: 'CRT_CNT',
+				    tooltip : {renderer : tooltipRenderer},
+// 				    calloutLabel: {
+// 				    	offset: 10,
+// 				    	fontWeight: 'bold',
+// 		                formatter: ({ datum, sectorLabelKey = 'TOTAL' }) => {
+// 		                    return datum.GB+"("+datum.WHS_MC_TP_CD+")";
+// 		                },
+// 		            },
+// 				    sectorLabel: {
+// 				    	fontWeight: 'bold',
+// 		                formatter: ({ datum, sectorLabelKey = 'TOTAL' }) => {
+// 		                    return (datum.TOTAL/total*100).toFixed(2)+"%";
+// 		                },
+// 		            },
+		        },
+		        
+		    ],
+		    
+		    legend: {
+		        enabled: true,
+		    },
+	}
+
+	var chartObj = agCharts.AgChart.create(options);
+}
 
 
+//라인형 차트
+var chart1 = function(data){
+
+	$("#chart1").empty();
+
+	//문자로 넘어온 데이터 값 숫자로 변환해주기
+	for(var i=0; i<data.length; i++){
+	  data[i].CRT_CNT = Number(data[i].CRT_CNT)	
+	}
+	
+	const options = {
+		    container: document.getElementById('chart1'),
+		    series: [
+		        {
+		            data: data,
+		            type: 'line',
+		            xKey: "CRT_CD",
+		            yKey: "CRT_CNT",
+		            yName: "CRT_CNT"
+		        },
+		        
+		    ],
+		    
+		    legend: {
+		        enabled: true,
+		    },
+	}
+
+	var chartObj = agCharts.AgChart.create(options);
+}
+
+function tooltipRenderer(params) {
+	return {
+		content: params.angleValue
+		,title :params.datum.CRT_CD
+	};
+}
 
 </script>
 

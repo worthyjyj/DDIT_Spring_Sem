@@ -44,6 +44,32 @@ public class TestDao {
 
 	public List<HashMap<String, Object>> getComboData() {
 		return this.sqlSessionTemplate.selectList("test.getComboData"); 
+	}
+
+	public List<HashMap<String, Object>> getCrtData(Map<String, Object> paramMap) {
+		//.selectone() : 1행(상세보기)
+		//.selectList("namespace.id", 파라미터) : 여러행(목록)
+		return this.sqlSessionTemplate.selectList("test.getCrtData",paramMap); 
+	}
+
+	public List<HashMap<String, Object>> getCrtCombo(Map<String, Object> paramMap) {
+		return this.sqlSessionTemplate.selectList("test.getCrtCombo",paramMap); 
+	}
+
+	public HashMap<String, Object> saveCrtData(List<HashMap<String, Object>> paramList) {
+		return this.sqlSessionTemplate.selectOne("test.saveCrtData",paramList); 
+	}
+
+	public int crtCreate(HashMap<String, Object> hashMap) {
+		return this.sqlSessionTemplate.insert("test.crtCreate",hashMap);
+	}
+
+	public int crtUpdate(HashMap<String, Object> hashMap) {
+		return this.sqlSessionTemplate.update("test.crtUpdate",hashMap);
+	}
+
+	public int crtDelete(HashMap<String, Object> hashMap) {
+		return this.sqlSessionTemplate.delete("test.crtDelete",hashMap);
 	} 
 	
 }

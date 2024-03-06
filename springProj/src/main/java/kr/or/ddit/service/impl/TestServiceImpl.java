@@ -70,5 +70,50 @@ public class TestServiceImpl implements TestService {
 		
 		return this.testDao.getComboData(); 
 	}
+
+	@Override
+	public List<HashMap<String, Object>> getCrtData(Map<String, Object> paramMap) {
+		 return this.testDao.getCrtData(paramMap); 
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getCrtCombo(Map<String, Object> paramMap) {
+		return this.testDao.getCrtCombo(paramMap); 
+	}
+
+	// CRUD에 따른 쿼리 처리
+	@SuppressWarnings("null")
+	@Override
+	public HashMap<String, Object> saveCrtData(List<HashMap<String, Object>> paramList) {
+		HashMap<String, Object> message = new HashMap<String, Object>(); 
+//		HashMap<String, Object> message = null; // 이걸로 하면 오류가 나는 이유: null로 초기화할 수는 있지만, 맵의 method를 사용하지 못하므로 권장하지 않음.  
+		
+		
+		for(int i=0; i<paramList.size(); i++) {
+			// Create
+			if(paramList.get(i).get("CUD").equals("C")) {
+				int result = this.testDao.crtCreate(paramList.get(i));
+				
+				if(result > 0) {
+					message.put("message", "0");
+				}
+			}else if(paramList.get(i).get("CUD").equals("U")) {
+				int result = this.testDao.crtUpdate(paramList.get(i));
+								
+				if(result > 0) {
+					message.put("message", result);
+				}
+			}else if(paramList.get(i).get("CUD").equals("D")) {
+				int result = this.testDao.crtDelete(paramList.get(i));
+								
+				if(result > 0) {
+					message.put("message", "0");
+				}
+			}
+		}
+		
+		System.out.println("message >> "+message.get("message"));
+		return message;
+	}
 	
 	}
