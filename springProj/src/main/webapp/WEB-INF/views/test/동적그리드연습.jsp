@@ -17,6 +17,7 @@
 </div>
 <!-- //상단 : title + btn -->
 
+
 <div class="contPage-search searchSHWrap" id="div_form_LOPRDN087">
 	<div class="border-box searchReq-box">
 		<div class="searchReq-tablebox">
