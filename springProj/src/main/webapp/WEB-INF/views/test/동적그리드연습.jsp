@@ -544,5 +544,26 @@
 
 	});
 	
+	// 동적 그리드 그릴 때 ALIAS를 이렇게 썼었음
+// 	SELECT 
+//     F_LANG_CODE(#{lang},#{cd_id},A.CHK_ITEM) AS CD_ITEM_NM
+//     ,CASE WHEN A.CHK_ITEM = 'CMT' THEN NVL(C.MRM_VAL1,'-') ELSE NVL(C.MRM_VAL1,'0') END AS QTY
+//     ,NVL(C.MC_CD,'-') AS TEAM1
+//     ,NVL(C.PLN_DATE,'-') AS TEAM2
+//     ,NVL((SELECT CD_ITEM_NM FROM LCOMTR107 WHERE CD_ID = 'S070' AND CD_ITEM = C.PLN_SHF),'-') AS TEAM3
+//     , DENSE_RANK() OVER(ORDER BY C.MC_CD)-1 AS datagrp
+//    FROM LOPRTR147 C
+//    JOIN LOPRTR116 A
+//      ON C.PLT_CD = A.PLT_CD
+//     AND C.CHK_ITEM = A.CHK_ITEM
+//    JOIN LCOMTR107 B 
+//      ON C.CHK_ITEM = B.CD_ITEM 
+//   WHERE C.PLT_CD = #{plt_cd}
+//     AND TO_DATE(C.PLN_DATE,'YYYY-MM-DD') BETWEEN REPLACE(#{sdate},'-','') AND REPLACE(#{edate},'-','')
+//     AND C.PLN_SHF LIKE #{pln_shf}||'%'
+//     AND C.MC_CD LIKE #{mc_cd}||'%'
+//     AND B.CD_ID = #{cd_id}
+//     AND A.USE_FG = 'Y'
+//   ORDER BY datagrp, C.MC_CD ,C.PLN_SHF , B.SORT_SEQ
 
 </script>
