@@ -143,6 +143,18 @@ public class TestController {
 		return message;
 	}
 	
+	/*
+	 요청URI : /create/gridPrac
+	 방식 : GET
+	*/
+	//골뱅이RequestMapping(value="/create",method=RequestMethod.GET)
+	@GetMapping("/gridPrac")
+	public String gridPrac(Model model) {
+		log.info("/test/gridPrac");
+		
+		return "test/gridPrac";
+	}
+	
 }
 
 
