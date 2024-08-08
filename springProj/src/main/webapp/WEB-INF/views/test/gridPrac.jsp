@@ -53,7 +53,7 @@
 
 <div class="contPage-body">
 	<div class="base-list table-list">
-		<div id="realgrid0" style="width: 100%; height: 100%;"></div>
+		<div id="realgrid0" style="width: 100%; height: 500px;"></div>
 	</div>
 </div>
 
@@ -78,6 +78,7 @@
 	.top-text>div {
 		margin-top: 2px;
 	}
+	
 </style>
 
 <script type="text/javascript">
@@ -89,11 +90,11 @@ var layout = [];
 
 
 /* 변수 선언 */
-var vPltCd = '${USER_SESSION.extraData.pltCd}';
-var LANG = '${lang}';
-var gStartDt = "";
-var gToday = MES_UTIL.gfn_Today();
-var initFlag = false;
+// var vPltCd = '${USER_SESSION.extraData.pltCd}';
+// var LANG = '${lang}';
+// var gStartDt = "";
+// var gToday = MES_UTIL.gfn_Today();
+// var initFlag = false;
 
 
 fields[0] = [
@@ -132,12 +133,6 @@ layout[0] = [
 		{name: "DATA2_A",	direction: "horizontal", hideChildHeaders:true, header: '계획',	items:['NEXT_BLDG_PLN_SEQ', 'NEXT_BLDG_PLN_QTY']}
 		,{name: "DATA2_B",	direction: "horizontal", hideChildHeaders:true, header: '실적',	items:['NEXT_BLDG_PRDT_QTY']}
 	  ]}
-	
-// 	, {name: "DATA3_grp",	direction: "horizontal", header: {text:I18('#야간조')}, items:[
-// 		{name: "DATA3_A",	direction: "horizontal", hideChildHeaders:true, header: {text:I18('#계획')},	items:['NNT_BLDG_PLN_SEQ', 'NNT_BLDG_PLN_QTY']}
-// 		,{name: "DATA3_B",	direction: "horizontal", hideChildHeaders:true, header: {text:I18('#실적')},	items:['NNT_BLDG_PRDT_QTY']}
-// 	  ]}
-// 	, {name: "DATA4",	direction: "horizontal", header: {text:I18('#반제품_대차')},	items:['SW_CNT', 'L11_CNT', 'CC1_CNT', 'CC2_CNT', 'CC3_CNT', 'BT1_CNT', 'BT2_CNT', 'TD_CNT', 'BD1_CNT']}
 	,'SW'
 ];
 
@@ -151,7 +146,7 @@ $(function() {
 			this.initEvent();
 			this.initCombo();
 			this.initDisp();
-
+			this.search();
 		}
 		
 		, initGrid : function() {
@@ -161,7 +156,7 @@ $(function() {
 				gridView[idx] = new RealGrid.GridView('realgrid' + idx);
 				gridView[idx].setDataSource(provider[idx]);
 				gridView[idx].setRowIndicator({visible: true});
-				setDefaultGrid(gridView[idx]);
+// 				setDefaultGrid(gridView[idx]);
 				gridView[idx].setStateBar({visible : false});
 				gridView[idx].setCheckBar({visible : false});
 				gridView[idx].setHeader({visible : true});
@@ -176,10 +171,11 @@ $(function() {
 				gridView[idx].setEditOptions({ insertable: true, deletable: true, editWhenFocused: true, commitWhenLeave: true, commitByCell : true });
 				gridView[idx].setOptions({hideDeletedRows : true, softDeleting : true});
 				gridView[idx].sortMode = "explicit";
-				gridView[idx].onContextMenuPopup = onContextMenuPopup;					//출력할 메뉴 설정
-				gridView[idx].onContextMenuItemClicked = onContextMenuItemClicked;		//메뉴 클릭시
+// 				gridView[idx].onContextMenuPopup = onContextMenuPopup;					//출력할 메뉴 설정
+// 				gridView[idx].onContextMenuItemClicked = onContextMenuItemClicked;		//메뉴 클릭시
 				gridView[idx].onCellDblClicked = this.onCellDblClicked;
 				gridView[idx].onCellButtonClicked = this.onCellButtonClicked;
+				
 			}
 
 		}
@@ -222,9 +218,9 @@ $(function() {
 		
 		, initCombo : function() {
 			// 공장
-			MES_UTIL.L_gfn_GetMasCdCombo( 'facCd' ,'C040' , '' , 1  , LRELDZ827.callback );
+// 			MES_UTIL.L_gfn_GetMasCdCombo( 'facCd' ,'C040' , '' , 1  , LRELDZ827.callback );
 
-			MES_UTIL.L_gfn_GetCalHanta('dateFromTo','startDate','endDate', 'dateperiod','${menuId}', LRELDZ827.callback);
+// 			MES_UTIL.L_gfn_GetCalHanta('dateFromTo','startDate','endDate', 'dateperiod','${menuId}', LRELDZ827.callback);
 		}
 
 		, callback : function(svcID, data) {
@@ -251,91 +247,161 @@ $(function() {
 		}
 
 
-		, search : function() {
-			 try {
-			        var vURL = 'LRELDZ827_SEARCH';
-			        $(".overlay").show();
+// 		, search : function() {
+// 			 try {
+// 			        var vURL = 'LRELDZ827_SEARCH';
+// 			        $(".overlay").show();
 
-			        var facCd = MES_UTIL.gfn_TransNullToEmpty($("#facCd").val());
+// 			        var facCd = MES_UTIL.gfn_TransNullToEmpty($("#facCd").val());
 
-			        this.searchCond = $('#div_form_LRELDZ827').serializeJson();
-			        this.searchCond.startDate = MES_UTIL.gfn_TransNullToEmpty($('#startDate').val().replace(/\-/g, ""));
+// 			        this.searchCond = $('#div_form_LRELDZ827').serializeJson();
+// 			        this.searchCond.startDate = MES_UTIL.gfn_TransNullToEmpty($('#startDate').val().replace(/\-/g, ""));
 
-// 			        console.log("searchCond >> ", this.searchCond);
+// // 			        console.log("searchCond >> ", this.searchCond);
 
-			        HTGF.Api.get('/api/LRELDZ827/' + vURL, this.searchCond).then(function(resData) {
-			            if (!MES_UTIL.gfn_IsNull(resData.result)) {
-			                let json_data = [];
-			                let BLDG_MC_CD = "";
-			                let temp = 0;
+// 			        HTGF.Api.get('/api/LRELDZ827/' + vURL, this.searchCond).then(function(resData) {
+// 			            if (!MES_UTIL.gfn_IsNull(resData.result)) {
+// 			                let json_data = [];
+// 			                let BLDG_MC_CD = "";
+// 			                let temp = 0;
 
-			                for (let i = 0; i <= resData.result.length; i++) {
-			                    // Sub Total 계산 (마지막행이거나 설비값이 달라질 경우)
-			                    if (i === resData.result.length || BLDG_MC_CD !== resData.result[i].BLDG_MC_CD) {
-			                    	 json_data.push({ BLDG_MC_CD: BLDG_MC_CD, BLDG_SPEC_CD: 'Sub Total'
-		                                    , BLDG_PLN_SEQ: LRELDZ827.getResult(resData.result, "BLDG_PLN_SEQ"  , temp , i )
-		                                    , BLDG_PLN_QTY: LRELDZ827.getResult(resData.result, "BLDG_PLN_QTY"  , temp , i ) 
-		                                    , BLDG_PRDT_QTY: LRELDZ827.getResult(resData.result, "BLDG_PRDT_QTY"  , temp , i ) 
-		                                    , NEXT_BLDG_PLN_SEQ: LRELDZ827.getResult(resData.result, "NEXT_BLDG_PLN_SEQ"  , temp , i )
-		                                    , NEXT_BLDG_PLN_QTY: LRELDZ827.getResult(resData.result, "NEXT_BLDG_PLN_QTY"  , temp , i ) 
-		                                    , NEXT_BLDG_PRDT_QTY: LRELDZ827.getResult(resData.result, "NEXT_BLDG_PRDT_QTY"  , temp , i ) 
-		                                    , NNT_BLDG_PLN_SEQ: LRELDZ827.getResult(resData.result, "NNT_BLDG_PLN_SEQ"  , temp , i )
-		                                    , NNT_BLDG_PLN_QTY: LRELDZ827.getResult(resData.result, "NNT_BLDG_PLN_QTY"  , temp , i ) 
-		                                    , NNT_BLDG_PRDT_QTY: LRELDZ827.getResult(resData.result, "NNT_BLDG_PRDT_QTY"  , temp , i ) 
-		                                    , SW_CNT:  LRELDZ827.getResult(resData.result, "SW_CNT"  , temp , i )
-		                                    , L11_CNT: LRELDZ827.getResult(resData.result, "L11_CNT" , temp , i )
-		                                    , CC1_CNT: LRELDZ827.getResult(resData.result, "CC1_CNT" , temp , i )
-		                                    , CC2_CNT: LRELDZ827.getResult(resData.result, "CC2_CNT" , temp , i )
-		                                    , CC3_CNT: LRELDZ827.getResult(resData.result, "CC3_CNT" , temp , i )
-		                                    , BT1_CNT: LRELDZ827.getResult(resData.result, "BT1_CNT" , temp , i )
-		                                    , BT2_CNT: LRELDZ827.getResult(resData.result, "BT2_CNT" , temp , i )
-		                                    , TD_CNT:  LRELDZ827.getResult(resData.result, "TD_CNT"  , temp , i ) 
-		                                    , BD1_CNT: LRELDZ827.getResult(resData.result, "BD1_CNT" , temp , i )
-		                                    });
+// 			                for (let i = 0; i <= resData.result.length; i++) {
+// 			                    // Sub Total 계산 (마지막행이거나 설비값이 달라질 경우)
+// 			                    if (i === resData.result.length || BLDG_MC_CD !== resData.result[i].BLDG_MC_CD) {
+// 			                    	 json_data.push({ BLDG_MC_CD: BLDG_MC_CD, BLDG_SPEC_CD: 'Sub Total'
+// 		                                    , BLDG_PLN_SEQ: LRELDZ827.getResult(resData.result, "BLDG_PLN_SEQ"  , temp , i )
+// 		                                    , BLDG_PLN_QTY: LRELDZ827.getResult(resData.result, "BLDG_PLN_QTY"  , temp , i ) 
+// 		                                    , BLDG_PRDT_QTY: LRELDZ827.getResult(resData.result, "BLDG_PRDT_QTY"  , temp , i ) 
+// 		                                    , NEXT_BLDG_PLN_SEQ: LRELDZ827.getResult(resData.result, "NEXT_BLDG_PLN_SEQ"  , temp , i )
+// 		                                    , NEXT_BLDG_PLN_QTY: LRELDZ827.getResult(resData.result, "NEXT_BLDG_PLN_QTY"  , temp , i ) 
+// 		                                    , NEXT_BLDG_PRDT_QTY: LRELDZ827.getResult(resData.result, "NEXT_BLDG_PRDT_QTY"  , temp , i ) 
+// 		                                    , NNT_BLDG_PLN_SEQ: LRELDZ827.getResult(resData.result, "NNT_BLDG_PLN_SEQ"  , temp , i )
+// 		                                    , NNT_BLDG_PLN_QTY: LRELDZ827.getResult(resData.result, "NNT_BLDG_PLN_QTY"  , temp , i ) 
+// 		                                    , NNT_BLDG_PRDT_QTY: LRELDZ827.getResult(resData.result, "NNT_BLDG_PRDT_QTY"  , temp , i ) 
+// 		                                    , SW_CNT:  LRELDZ827.getResult(resData.result, "SW_CNT"  , temp , i )
+// 		                                    , L11_CNT: LRELDZ827.getResult(resData.result, "L11_CNT" , temp , i )
+// 		                                    , CC1_CNT: LRELDZ827.getResult(resData.result, "CC1_CNT" , temp , i )
+// 		                                    , CC2_CNT: LRELDZ827.getResult(resData.result, "CC2_CNT" , temp , i )
+// 		                                    , CC3_CNT: LRELDZ827.getResult(resData.result, "CC3_CNT" , temp , i )
+// 		                                    , BT1_CNT: LRELDZ827.getResult(resData.result, "BT1_CNT" , temp , i )
+// 		                                    , BT2_CNT: LRELDZ827.getResult(resData.result, "BT2_CNT" , temp , i )
+// 		                                    , TD_CNT:  LRELDZ827.getResult(resData.result, "TD_CNT"  , temp , i ) 
+// 		                                    , BD1_CNT: LRELDZ827.getResult(resData.result, "BD1_CNT" , temp , i )
+// 		                                    });
 			                        
-			                        if (i < resData.result.length) {
-			                            BLDG_MC_CD = resData.result[i].BLDG_MC_CD;
-			                            temp = i;
-			                        }
-			                    }
+// 			                        if (i < resData.result.length) {
+// 			                            BLDG_MC_CD = resData.result[i].BLDG_MC_CD;
+// 			                            temp = i;
+// 			                        }
+// 			                    }
 
-								//설비값이 같은 행은 json_data 바로 들어가게 하기 
-			                    if (i < resData.result.length) {
-			                        json_data.push(resData.result[i]);
-			                    }
-			                }
+// 								//설비값이 같은 행은 json_data 바로 들어가게 하기 
+// 			                    if (i < resData.result.length) {
+// 			                        json_data.push(resData.result[i]);
+// 			                    }
+// 			                }
 
-// 			                console.log(json_data);
+// // 			                console.log(json_data);
 
-							//배열의 첫번째 값 삭제
-			                json_data.shift();
+// 							//배열의 첫번째 값 삭제
+// 			                json_data.shift();
 
-							//subTotal 색깔넣기
-			                gridView[0].setRowStyleCallback(function(grid, item, fixed) {
-							    var ret = {};
-							    var color = grid.getValue(item.index, "BLDG_SPEC_CD");
+// 							//subTotal 색깔넣기
+// 			                gridView[0].setRowStyleCallback(function(grid, item, fixed) {
+// 							    var ret = {};
+// 							    var color = grid.getValue(item.index, "BLDG_SPEC_CD");
 
-							    if (color == 'Sub Total') {
-							      return 'color-yellow'
-							    }
-							});
+// 							    if (color == 'Sub Total') {
+// 							      return 'color-yellow'
+// 							    }
+// 							});
 							
-			                provider[0].fillJsonData(json_data, { fillMode: "set" });
+// 			                provider[0].fillJsonData(json_data, { fillMode: "set" });
 
-			                // Set timer
-			                FOOTER.setTimer(resData.timer);
-			            }
-			            $(".overlay").hide();
-			        }).catch(function(e) {
-			            $(".overlay").hide();
-			            if (e.status !== 400) {
-			                msg_alert('${menuId}', 'Server Error' + e, '', I18('#확인'));
-			            }
-			        });
-			    } catch (e) {
-			        $(".overlay").hide();
-			        console.error(e);
-			    }
+// 			                // Set timer
+// 			                FOOTER.setTimer(resData.timer);
+// 			            }
+// 			            $(".overlay").hide();
+// 			        }).catch(function(e) {
+// 			            $(".overlay").hide();
+// 			            if (e.status !== 400) {
+// 			                msg_alert('${menuId}', 'Server Error' + e, '', I18('#확인'));
+// 			            }
+// 			        });
+// 			    } catch (e) {
+// 			        $(".overlay").hide();
+// 			        console.error(e);
+// 			    }
+// 		}
+		, search : function() {
+			
+			 let json_data = [
+				 {
+					 MC_CD : "A001"
+					 ,SPEC_CD : "a"
+					 ,BLDG_PLN_SEQ : 1
+					 ,BLDG_PLN_QTY : 1
+ 					 ,BLDG_PRDT_QTY : 1
+					 ,NEXT_BLDG_PLN_SEQ : 1
+					 ,NEXT_BLDG_PLN_QTY : 1
+					 ,NEXT_BLDG_PRDT_QTY : 1
+					 ,SW : "0/1"
+				 }
+				 ,
+				 {
+					 MC_CD : "A001"
+					 ,SPEC_CD : "b"
+					 ,BLDG_PLN_SEQ : 1
+					 ,BLDG_PLN_QTY : 1
+ 					 ,BLDG_PRDT_QTY : 1
+					 ,NEXT_BLDG_PLN_SEQ : 1
+					 ,NEXT_BLDG_PLN_QTY : 1
+					 ,NEXT_BLDG_PRDT_QTY : 1
+					 ,SW : "2/0"
+				 }
+				 ,
+				 {
+					 MC_CD : "A001"
+					 ,SPEC_CD : "c"
+					 ,BLDG_PLN_SEQ : 1
+					 ,BLDG_PLN_QTY : 3
+ 					 ,BLDG_PRDT_QTY : 1
+					 ,NEXT_BLDG_PLN_SEQ : 1
+					 ,NEXT_BLDG_PLN_QTY : 1
+					 ,NEXT_BLDG_PRDT_QTY : 1
+					 ,SW : "0/0"
+				 }
+				 ,
+				 {
+					 MC_CD : "A002"
+					 ,SPEC_CD : "b"
+					 ,BLDG_PLN_SEQ : 22
+					 ,BLDG_PLN_QTY : 0
+ 					 ,BLDG_PRDT_QTY : 1
+					 ,NEXT_BLDG_PLN_SEQ : 1
+					 ,NEXT_BLDG_PLN_QTY : 1
+					 ,NEXT_BLDG_PRDT_QTY : 1
+					 ,SW : "4/0"
+				 }
+				 ,
+				 {
+					 MC_CD : "A002"
+					 ,SPEC_CD : "a"
+					 ,BLDG_PLN_SEQ : 5
+					 ,BLDG_PLN_QTY : 0
+ 					 ,BLDG_PRDT_QTY : 1
+					 ,NEXT_BLDG_PLN_SEQ : 1
+					 ,NEXT_BLDG_PLN_QTY : 1
+					 ,NEXT_BLDG_PRDT_QTY : 1
+					 ,SW : "9/0"
+				 }
+				 ];
+			 
+			 //SUBtotal... 
+			 
+			 
+			 provider[0].fillJsonData(json_data, { fillMode: "set" });
+			 
 		}
 		
 		, excel : function() {
