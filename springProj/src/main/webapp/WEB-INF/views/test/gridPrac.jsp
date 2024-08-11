@@ -395,12 +395,104 @@ $(function() {
 					 ,NEXT_BLDG_PRDT_QTY : 1
 					 ,SW : "9/0"
 				 }
+				 ,
+				 {
+					 MC_CD : "A003"
+					 ,SPEC_CD : "b"
+					 ,BLDG_PLN_SEQ : 22
+					 ,BLDG_PLN_QTY : 0
+ 					 ,BLDG_PRDT_QTY : 1
+					 ,NEXT_BLDG_PLN_SEQ : 1
+					 ,NEXT_BLDG_PLN_QTY : 1
+					 ,NEXT_BLDG_PRDT_QTY : 1
+					 ,SW : "4/0"
+				 }
+				 ,
+				 {
+					 MC_CD : "A003"
+					 ,SPEC_CD : "a"
+					 ,BLDG_PLN_SEQ : 5
+					 ,BLDG_PLN_QTY : 0
+ 					 ,BLDG_PRDT_QTY : 1
+					 ,NEXT_BLDG_PLN_SEQ : 1
+					 ,NEXT_BLDG_PLN_QTY : 1
+					 ,NEXT_BLDG_PRDT_QTY : 1
+					 ,SW : "9/0"
+				 }
 				 ];
 			 
-			 //SUBtotal... 
+			//SUBtotal... 
+			let json_data2 = []; 
+			let mccd = json_data[0].MC_CD;
+			let idx = 0; 
+			 
+			for(let i=0; i<=json_data.length; i++){
+				let val1 = 0;
+				let val2 = 0;
+				let val3 = 0;
+				let val4 = 0;
+				let val5 = 0;
+				let val6 = 0;
+				let val7_1 = 0;
+				let val7_2 = 0;
+				
+				if(i== json_data.length || mccd != json_data[i].MC_CD){
+					for(k=idx; k<i; k++){
+						val1 += json_data[k].BLDG_PLN_SEQ; 
+						val2 += json_data[k].BLDG_PLN_QTY; 
+						val3 += json_data[k].BLDG_PRDT_QTY; 
+						val4 += json_data[k].NEXT_BLDG_PLN_SEQ; 
+						val5 += json_data[k].NEXT_BLDG_PLN_QTY; 
+						val6 += json_data[k].NEXT_BLDG_PRDT_QTY; 
+						
+						var slikeStd = json_data[k].SW.indexOf("/");
+						val7_1 += Number(json_data[k].SW.slice(0,slikeStd));
+						val7_2 += Number(json_data[k].SW.slice(slikeStd+1));
+						
+						
+					}
+					json_data2.push(
+						{
+						  MC_CD : "SUB_TOTAL"
+						 ,SPEC_CD : ""
+						 ,BLDG_PLN_SEQ : val1
+						 ,BLDG_PLN_QTY : val2
+	 					 ,BLDG_PRDT_QTY : val3
+						 ,NEXT_BLDG_PLN_SEQ : val4
+						 ,NEXT_BLDG_PLN_QTY : val5
+						 ,NEXT_BLDG_PRDT_QTY : val6
+						 ,SW : val7_1+"/"+val7_2
+						}	
+						
+					)
+					 
+					    if(i < json_data.length){
+					    	idx = i;
+							mccd = json_data[i].MC_CD;
+					    }
+						
+					
+				}
+				
+				  if(i < json_data.length){
+					// 모든 행 json_data2에 넣기..
+					json_data2.push(json_data[i]);
+				  }
+					
+			}
 			 
 			 
-			 provider[0].fillJsonData(json_data, { fillMode: "set" });
+			//subTotal 색깔넣기
+            gridView[0].setRowStyleCallback(function(grid, item, fixed) {
+				    var ret = {};
+				    var color = grid.getValue(item.index, "MC_CD");
+
+				    if (color == 'SUB_TOTAL') {
+				      return 'color-yellow'
+				    }
+				});
+			 
+			 provider[0].fillJsonData(json_data2, { fillMode: "set" });
 			 
 		}
 		
