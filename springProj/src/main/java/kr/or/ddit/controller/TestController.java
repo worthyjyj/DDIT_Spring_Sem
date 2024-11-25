@@ -155,6 +155,15 @@ public class TestController {
 		return "test/gridPrac";
 	}
 	
+	@GetMapping("/register")
+	public String register(Model model) {
+		log.info("/test/register");
+		
+		return "test/register";
+	}
+	
+	
+	
 }
 
 
