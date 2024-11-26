@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.service.TestService;
+import kr.or.ddit.util.MailUtil;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -159,9 +160,35 @@ public class TestController {
 	public String register(Model model) {
 		log.info("/test/register");
 		
+		MailUtil.sendNotiMail("배고파","배고파");
+		
 		return "test/register";
 	}
 	
+	@ResponseBody
+	@PostMapping("/checkId")
+	public HashMap<String, Object> checkId(@RequestBody Map<String, Object> paramMap) {
+		log.info("checkId에 왔다");
+		
+		HashMap<String, Object> checkIdCnt = testService.checkId(paramMap);
+		log.info("paramMap : " + paramMap);
+		log.info("checkIdCnt : " + checkIdCnt);
+		
+		return checkIdCnt;
+	}
+	
+	@ResponseBody
+	@PostMapping("/join")
+	public int join(@RequestBody Map<String, Object> paramMap) {
+		log.info("join에 왔다");
+		log.info("paramMap : " + paramMap);
+		
+		int message;
+		
+		message = testService.join(paramMap);
+		
+		return message;
+	}
 	
 	
 }

@@ -70,6 +70,14 @@ public class TestDao {
 
 	public int crtDelete(HashMap<String, Object> hashMap) {
 		return this.sqlSessionTemplate.delete("test.crtDelete",hashMap);
+	}
+
+	public HashMap<String, Object> checkId(Map<String, Object> paramMap) {
+		return this.sqlSessionTemplate.selectOne("test.checkId",paramMap); 
+	}
+
+	public int join(Map<String, Object> paramMap) {
+		return this.sqlSessionTemplate.insert("test.join",paramMap);
 	} 
 	
 }

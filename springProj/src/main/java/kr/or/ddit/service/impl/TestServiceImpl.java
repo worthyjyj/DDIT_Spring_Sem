@@ -115,5 +115,17 @@ public class TestServiceImpl implements TestService {
 		System.out.println("message >> "+message.get("message"));
 		return message;
 	}
+
+	@Override
+	public HashMap<String, Object> checkId(Map<String, Object> paramMap) {
+		
+		return this.testDao.checkId(paramMap);
+	}
+
+	@Override
+	public int join(Map<String, Object> paramMap) {
+		
+		return this.testDao.join(paramMap);
+	}
 	
 	}

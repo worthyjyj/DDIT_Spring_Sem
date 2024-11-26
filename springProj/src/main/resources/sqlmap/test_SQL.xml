@@ -114,4 +114,16 @@
 	   DELETE FROM crtprac WHERE CRT_CD = #{CRT_CD}
 	</delete>
 	
+	<select id="checkId"  parameterType="hashMap"  resultType="Map">
+		select COUNT(*) AS CNT
+		  from member
+		  where member_id = #{id}
+	</select>
+	
+	<insert id="join" parameterType="hashMap">
+	  INSERT INTO member
+		(member_id, password)
+	  VALUES(#{id},#{pw})
+	</insert>
+	
 </mapper>

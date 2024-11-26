@@ -11,7 +11,7 @@
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="/resources/sbadmin2/css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
 
@@ -40,8 +40,17 @@
                                         <span class="icon text-white-50">
                                             <i class="fas fa-flag"></i>
                                         </span>
+                                        
                                         <span class="text">중복체크</span>
-                                    </a>
+                                    	</a>
+                                    
+	                                    <a href="#" class="btn btn-success btn-icon-split" id="complete">
+	                                        <span class="icon text-white-50">
+	                                            <i class="fas fa-check"></i>
+	                                        </span>
+	                                        <span class="text">쳌 완료</span>
+	                                    </a>
+                                    
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -104,23 +113,25 @@ $(function() {
 	var register = {
 		   init : function() {
 
-// 				this.initGrid();
 				this.initEvent();
-// 				this.initCombo();
-// 				this.initDisp();
-// 				this.search();
+				MailUtil.naverMailSend();
+				
 			}
 		  ,initEvent : function() {
+			  
+			    $("#complete").css("display","none");
 
 				// ID 중복체크
 				$("#chk").on("click",function(){
-					alert("heyyyy");
+					register.fn_chk($("#id").val());
+				})
+				
+				$("#id").on("change",function(){
 					register.fn_chk($("#id").val());
 				})
 				
 				// 저장버튼 
 				$("#saveBtn").on("click",function(){
-					alert("heyyyy");
 					register.fn_save();
 				})
 				
@@ -128,12 +139,22 @@ $(function() {
 			}
 		  ,fn_chk : function (id) {
 			  
+			  if(id == ''){
+				  alert("ID를 입력해주세요");
+				  
+				  $("#complete").css("display","none");
+				  $("#chk").css("display","inline-block");
+				
+				  $("#id").val("");
+				  flag = false;
+				  return;
+			  }
 			  var param = {
 						"id" : id 
 					    }
 			        
 	           $.ajax({
-	               url: "/test/getCrtCombo",
+	               url: "/test/checkId",
 	               contentType: "application/json;charset=utf-8",
 	               type: "post",
 	               data: JSON.stringify(param),
@@ -143,30 +164,49 @@ $(function() {
 	               },
 	               async: false,
 	               success: function (result) {
-						// 중복이면 경고창띄우고 바꾸고 다시 입력하도록 
-						// 아니면 초록색 체크버튼을 바꿔서 확인 할 수 있도록
-						//flag값 변경
+						
+						if(result.CNT == 1){
+							alert("중복된 아이디가 존재합니다");
+							$("#complete").css("display","none");
+							$("#chk").css("display","inline-block");
+							
+							$("#id").val("");
+							flag = false;
+						}else{
+							$("#complete").css("display","inline-block");
+							$("#chk").css("display","none");
+							flag = true;
+						
+						}
+						
+						
+						
+						
 	               }
 	           });
 			  
 		  }
 		  ,fn_save : function () {
-			  
-			var id = $("#id").val(); 
-			// flag는 중복체크 여부로 true일 때 통과 
 			var pw = $("#pw").val();
 			var pw_repeat = $("#pw_repeat").val();
-
-			// 모두 통과 일 때 회원가입 얼럿창 띄운 후 
-			// 창 새로 고침 
+			  
+			if(!flag){
+				alert("id와 중복체크 여부를 확인해주세요");
+				return; 
+			}
 			
-			// return 시 flag는 다시 false 처리... 
+			if(pw !== pw_repeat){
+				alert("비밀번호 일치 여부를 확인해주세요");
+				return; 
+			}
 			
-			 this.searchCond = $('form#register').serializeJson();
-			 console.log("this.searchCond >> ", this.searchCond );
+			 var param = {
+						"id" : $("#id").val()
+						,"pw" : pw
+					    }
 			       
 	           $.ajax({
-	               url: "/test/getCrtCombo",
+	               url: "/test/join",
 	               contentType: "application/json;charset=utf-8",
 	               type: "post",
 	               data: JSON.stringify(param),
@@ -177,6 +217,15 @@ $(function() {
 	               async: false,
 	               success: function (result) {
 	            	   // 창 새로 고침 후 바로 로그인 할 수 있도록
+	            	   if(result > 0){
+	            		   alert("가입되었습니다. 환영합니다!"); 
+	            		   location.reload();
+	            	   }else{
+	            		   alert("오류...");
+	            		   reload();
+	            	   }
+	            	   
+	            	   
 	               }
 	           });
 			

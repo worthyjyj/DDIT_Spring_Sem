@@ -227,6 +227,21 @@
 		    <version>2.13.3</version>
 		</dependency>
 		
+		<!-- mail(SMTP) -->
+		<dependency>
+		    <groupId>org.simplejavamail</groupId>
+		    <artifactId>simple-java-mail</artifactId>
+		    <version>6.0.4</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+		<dependency>
+		    <groupId>javax.mail</groupId>
+		    <artifactId>mail</artifactId>
+		    <version>1.4.7</version>
+		</dependency>
+				
+		
 		<!-- 파일업로드 시작 -->
 		<!-- commons-fileupload 라이브러리는 tomcat7.0버전 이후로는
 		서블릿 3.0이상에서 지원함 

@@ -20,5 +20,9 @@ public interface TestService {
 
 	public HashMap<String, Object> saveCrtData(List<HashMap<String, Object>> paramList);
 
+	public HashMap<String, Object> checkId(Map<String, Object> paramMap);
+
+	public int join(Map<String, Object> paramMap);
+
 	
 }
