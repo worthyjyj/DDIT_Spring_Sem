@@ -126,4 +126,9 @@
 	  VALUES(#{id},#{pw})
 	</insert>
 	
+	<select id="getmemList" parameterType="hashMap"  resultType="Map">
+	   select member_id 
+   		from member
+	</select>
+	
 </mapper>

@@ -24,5 +24,7 @@ public interface TestService {
 
 	public int join(Map<String, Object> paramMap);
 
+	public List<HashMap<String, Object>> getmemList(Map<String, Object> paramMap);
+
 	
 }

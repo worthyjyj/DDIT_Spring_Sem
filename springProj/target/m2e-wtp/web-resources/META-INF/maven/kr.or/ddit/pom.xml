@@ -177,6 +177,13 @@
 		    <artifactId>ojdbc6</artifactId>
 		    <version>11.2.0.4</version>
 		</dependency>
+		
+		<!-- 2023.12.14 개인 공부용 추가 mariadb-JDBC -->
+		<dependency>
+		    <groupId>org.mariadb.jdbc</groupId>
+		    <artifactId>mariadb-java-client</artifactId>
+		    <version>3.1.4</version>
+		</dependency>
 		<!-- Database 라이브러리 끝 -->
 		
 		<!-- tiles 시작 (jsp include 같은거..!)-->
@@ -219,6 +226,21 @@
 		    <artifactId>jackson-databind</artifactId>
 		    <version>2.13.3</version>
 		</dependency>
+		
+		<!-- mail(SMTP) -->
+		<dependency>
+		    <groupId>org.simplejavamail</groupId>
+		    <artifactId>simple-java-mail</artifactId>
+		    <version>6.0.4</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+		<dependency>
+		    <groupId>javax.mail</groupId>
+		    <artifactId>mail</artifactId>
+		    <version>1.4.7</version>
+		</dependency>
+				
 		
 		<!-- 파일업로드 시작 -->
 		<!-- commons-fileupload 라이브러리는 tomcat7.0버전 이후로는

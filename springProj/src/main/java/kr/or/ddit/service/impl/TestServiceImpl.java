@@ -127,5 +127,10 @@ public class TestServiceImpl implements TestService {
 		
 		return this.testDao.join(paramMap);
 	}
+
+	@Override
+	public List<HashMap<String, Object>> getmemList(Map<String, Object> paramMap) {
+		return this.testDao.getmemList(paramMap);
+	}
 	
 	}

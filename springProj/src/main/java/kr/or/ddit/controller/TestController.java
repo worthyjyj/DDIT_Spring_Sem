@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,10 +161,10 @@ public class TestController {
 	}
 	
 	@GetMapping("/register")
-	public String register(Model model) {
+	static public String register(Model model) {
 		log.info("/test/register");
 		
-		MailUtil.sendNotiMail("배고파","배고파");
+			MailUtil.sendNotiMail("","");
 		
 		return "test/register";
 	}
@@ -190,6 +194,49 @@ public class TestController {
 		return message;
 	}
 	
+	@GetMapping("/sendMail")
+	static public String sendMail(Model model) {
+		log.info("/test/sendMail");
+		
+		return "test/sendMail";
+	}
+	
+	@ResponseBody
+	@PostMapping("/getmemList")
+	public List<HashMap<String, Object>> getmemList(@RequestBody Map<String, Object> paramMap) {
+		log.info("getmemList에 왔다");
+		
+		List<HashMap<String, Object>> memList = testService.getmemList(paramMap);
+		log.info("paramMap : " + paramMap);
+		log.info("checkIdCnt : " + memList);
+		
+		return memList;
+	}
+	
+	
+	@ResponseBody
+	@PostMapping("/sendMail")
+	public int sendMail(HttpServletRequest request,@RequestBody Map<String, Object> paramMap) {
+		log.info("sendMail 전송..");
+		int message = 1;
+		
+		HttpSession session=request.getSession();
+		
+		String id=(String)session.getAttribute("id");
+		log.info("세션 로그인 ID : " + id);
+		log.info("paramMap : " + paramMap);
+		
+//		List<HashMap<String, Object>> memList = testService.getmemList(paramMap);
+		
+		return message;
+	}
+	
+	@GetMapping("/myMail")
+	static public String myMail(Model model) {
+		log.info("/test/myMail");
+		
+		return "test/myMail";
+	}
 	
 }
 
