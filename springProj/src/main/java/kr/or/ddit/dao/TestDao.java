@@ -78,10 +78,6 @@ public class TestDao {
 
 	public int join(Map<String, Object> paramMap) {
 		return this.sqlSessionTemplate.insert("test.join",paramMap);
-	}
-
-	public List<HashMap<String, Object>> getmemList(Map<String, Object> paramMap) {
-		return this.sqlSessionTemplate.selectList("test.getmemList",paramMap); 
 	} 
 	
 }
