@@ -23,6 +23,8 @@ public interface TestService {
 	public HashMap<String, Object> checkId(Map<String, Object> paramMap);
 
 	public int join(Map<String, Object> paramMap);
+	
+	public List<HashMap<String, Object>> loginTry(Map<String, Object> paramMap);
 
 	
 }

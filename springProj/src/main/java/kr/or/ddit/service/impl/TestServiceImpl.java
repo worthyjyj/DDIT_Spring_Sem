@@ -128,4 +128,9 @@ public class TestServiceImpl implements TestService {
 		return this.testDao.join(paramMap);
 	}
 	
+	@Override
+	public List<HashMap<String, Object>> loginTry(Map<String, Object> paramMap) {
+		return this.testDao.loginTry(paramMap); 
+	}
+	
 	}

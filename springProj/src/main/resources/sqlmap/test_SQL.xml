@@ -126,4 +126,12 @@
 	  VALUES(#{id},#{pw})
 	</insert>
 	
+	<select id="loginTry" parameterType="hashMap"  resultType="Map">
+	select COUNT(*) as CNT
+       ,member_id as ID
+	 from member
+	 where member_id = #{id}
+	 and password = #{pw}
+	</select>
+	
 </mapper>

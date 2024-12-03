@@ -80,4 +80,8 @@ public class TestDao {
 		return this.sqlSessionTemplate.insert("test.join",paramMap);
 	} 
 	
+	public List<HashMap<String, Object>> loginTry(Map<String, Object> paramMap) {
+		return this.sqlSessionTemplate.selectList("test.loginTry",paramMap); 
+	} 
+	
 }
