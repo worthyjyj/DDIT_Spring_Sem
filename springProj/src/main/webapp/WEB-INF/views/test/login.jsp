@@ -128,6 +128,10 @@ document.getElementById('loginBtn').onclick = function(){
            if(result.length > 0){
         	   if(result[0].CNT > 0){
         		   alert("LOGIN SUCCESS!!! "+document.getElementById('exampleInputEmail').value+"");
+
+        		    // home.jsp로 이동
+					location.href = "http://localhost:8081/";
+					
         	   }else{
         		   alert("TRY AGAIN");
         	   } 

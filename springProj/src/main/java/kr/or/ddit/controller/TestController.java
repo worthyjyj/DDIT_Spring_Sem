@@ -1,10 +1,14 @@
 package kr.or.ddit.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +18,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.service.TestService;
-import kr.or.ddit.util.MailUtil;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -160,8 +164,6 @@ public class TestController {
 	public String register(Model model) {
 		log.info("/test/register");
 		
-		MailUtil.sendNotiMail("배고파","배고파");
-		
 		return "test/register";
 	}
 	
@@ -200,7 +202,7 @@ public class TestController {
 	
 	@ResponseBody
 	@PostMapping("/loginTry")
-	public List<HashMap<String, Object>> loginTry(HttpServletRequest request,@RequestBody Map<String, Object> paramMap) {
+	public List<HashMap<String, Object>> loginTry(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, Object> paramMap) throws ServletException, IOException {
 		log.info("loginTry에 왔다");
 		
 		List<HashMap<String, Object>> result = testService.loginTry(paramMap);
@@ -209,11 +211,10 @@ public class TestController {
 		
 	    HttpSession session=request.getSession();
 		
-	    // 여기서 에러나는 듯함..
-		if((int)result.get(0).get("CNT") == 1) {
-			 session.setAttribute("id", result.get(0).get("ID"));
+		if (Integer.valueOf(result.get(0).get("CNT").toString()) == 1) {
+		    session.setAttribute("id", result.get(0).get("ID"));
 		}
-		
+	    
 		return result;
 	}
 	
@@ -231,8 +232,46 @@ public class TestController {
 		return "test/myMail";
 	}
 	
-	
+	@GetMapping("/logout")
+	public String logout(HttpServletRequest request,Model model) {
+		log.info("/test/logout");
+		
+		//세션 비우기 
+		HttpSession session = request.getSession();    
+	    session.invalidate();
+	    
+	    //로그아웃하면 다시 /login으로 이동해야하는데 url은 변경안돼서 
+	    // redirct 해야할 것 같은데 모르겠음...
+	    
+	    
 
+		
+		return "test/login";
+	}
+	
+	
+	@ResponseBody
+	@PostMapping("/getMail")
+	public List<HashMap<String, Object>> getMail(@RequestBody Map<String, Object> paramMap) {
+		log.info("getMail에 왔다");
+		
+		List<HashMap<String, Object>> getMail = testService.getMail(paramMap);
+		log.info("paramMap : " + paramMap);
+		log.info("getMail : " + getMail);
+		
+		return getMail;
+	}
+	
+	
+	@GetMapping("/mailDetail")
+	public String mailDetail(Model model, @RequestParam Map<String, Object> paramMap) {
+		log.info("/mailDetail에 왔다");
+		
+		System.out.println("param >> "+ paramMap);
+		
+		return "test/mailDetail";
+	}
+	
 	
 	
 }

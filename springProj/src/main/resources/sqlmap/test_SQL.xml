@@ -134,4 +134,18 @@
 	 and password = #{pw}
 	</select>
 	
+	
+	<select id="getMail" parameterType="hashMap"  resultType="Map">
+	select 
+		 mail_no
+		,reciever
+		,sender
+		,content
+		,read_yn
+		,send_date
+		,title
+	  from mail
+	  where reciever = #{reciever}
+	</select>
+	
 </mapper>

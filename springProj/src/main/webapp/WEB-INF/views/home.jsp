@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<!-- 세션 id.. -->
+<% String id=(String)session.getAttribute("id");%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -256,8 +260,8 @@
 
                         <!-- Nav Item - Messages -->
                         <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link " href="/test/myMail" id="" role="button"
+                                data-toggle="" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
                                 <!-- Counter - Messages -->
                                 <span class="badge badge-danger badge-counter">7</span>
@@ -326,7 +330,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><%=id%>님 환영합니다!</span>
                                 <img class="img-profile rounded-circle"
                                     src="/resources/sbadmin2/img/undraw_profile.svg">
                             </a>
@@ -346,7 +350,11 @@
                                     Activity Log
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+<!--                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal"> -->
+<!--                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> -->
+<!--                                     Logout -->
+<!--                                 </a> -->
+                                <a class="dropdown-item" href="/test/logout" >
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
@@ -753,3 +761,8 @@
 </body>
 
 </html>
+
+<script>
+console.log("개똥이");
+
+</script>

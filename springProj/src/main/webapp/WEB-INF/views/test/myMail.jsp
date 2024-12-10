@@ -24,7 +24,7 @@
                              <tr>
                                  <th>보낸사람</th>
                                  <th>메일제목</th>
-                                 <th>메일내용</th>
+<!--                                  <th>메일내용</th> -->
                                  <th>발송일시</th>
                              </tr>
                          </thead>
@@ -32,7 +32,7 @@
                              <tr>
                                  <th>보낸사람</th>
                                  <th>메일제목</th>
-                                 <th>메일내용</th>
+<!--                                  <th>메일내용</th> -->
                                  <th>발송일시</th>
                              </tr>
                          </tfoot>
@@ -75,9 +75,7 @@
 <script>
 $(function() {
 	
-	id = <%=id%>;
-	
-	console.log("id >> ", id);
+	var id = "<%=id%>";
 	
 	var myMail = {
 			   init : function() {
@@ -96,9 +94,7 @@ $(function() {
 				}
 	  			,fn_getmail : function () {
 				  
-				 
-// 				  var param = {"reciever" : id};
-				  var param = {"reciever" : 'test'};
+				  var param = {"reciever" : id};
 				        
 		           $.ajax({
 		               url: "/test/getMail",
@@ -133,7 +129,7 @@ $(function() {
                                 str+='<input type="hidden" value="'+value.mail_no+'">';
                                 str+='<td>'+value.sender+'</td>     ';
                                 str+='<td><a class="test" onclick="fn_read(this);">'+value.title+'</a></td>';
-                                str+='<td>'+value.content+'</td>       ';
+//                                 str+='<td>'+value.content+'</td>       ';
                                 str+='<td>'+send_date+'</td>              ';
                            		str+='</tr>                    ';
 		            		  }
@@ -151,7 +147,7 @@ $(function() {
 	
 })
 
-//읽은 메일 표시
+//읽은 메일 표시 및 페이지 상세로 이동
 function fn_read (a) {
 	$(a).closest("tr").css("background", "#FFFACD");
 	var mail_id = $(a).closest("tr").find("input").val();
@@ -177,6 +173,8 @@ function fn_read (a) {
          }
      });
      
+     //메일 상세로 이동
+     location.href= "/test/mailDetail?mail_id="+mail_id;
 }
 
 </script>
