@@ -127,6 +127,9 @@ $(function() {
 									str+='<tr>                     ';
 		            		    }
                                 str+='<input type="hidden" value="'+value.mail_no+'">';
+                                str+='<input type="hidden" value="'+value.sender+'">';
+                                str+='<input type="hidden" value="'+value.title+'">';
+                                str+='<input type="hidden" value="'+value.content+'">';
                                 str+='<td>'+value.sender+'</td>     ';
                                 str+='<td><a class="test" onclick="fn_read(this);">'+value.title+'</a></td>';
 //                                 str+='<td>'+value.content+'</td>       ';
@@ -151,6 +154,9 @@ $(function() {
 function fn_read (a) {
 	$(a).closest("tr").css("background", "#FFFACD");
 	var mail_id = $(a).closest("tr").find("input").val();
+	var sender = $(a).closest("tr").find("input:eq(1)").val();  
+	var title = $(a).closest("tr").find("input:eq(2)").val();  
+	var content = $(a).closest("tr").find("input:eq(3)").val();  
 	
 	var param = {"mail_id" : mail_id};
      
@@ -174,7 +180,7 @@ function fn_read (a) {
      });
      
      //메일 상세로 이동
-     location.href= "/test/mailDetail?mail_id="+mail_id;
+     location.href= "/test/mailDetail?mail_id="+mail_id+"&&sender="+sender+"&&title="+title+"&&content="+content;
 }
 
 </script>

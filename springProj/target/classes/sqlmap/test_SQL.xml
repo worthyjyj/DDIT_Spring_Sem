@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <!-- namespace : xml파일이 여러개일 수 있으므로 
+      이를 구별하기 위한 식별 용도로 사용 
+ -->
+      
+<mapper namespace="test">
+	
+	<select id="getlist" parameterType="hashMap"  resultType="Map">
+	  select 
+		CAST(seq AS char(10)) as seq 
+		,content
+		,CAST(date_format(reg_date,'%Y-%m-%d') AS char(100)) as reg_date
+		,reg_user
+		,title 
+		from board
+		WHERE 1=1
+		<if test="seq!=null and seq!=''">
+		AND seq = #{seq}
+		</if>
+		<if test="title!=null and title!=''">
+		AND title LIKE concat('%',#{title},'%') 
+		</if>
+		<if test="sdate!=null and sdate!='' and edate!=null and edate!=''">
+		AND date_format(reg_date,'%Y-%m-%d') between date_format(#{sdate},'%Y-%m-%d') and date_format(#{edate},'%Y-%m-%d')
+		</if>
+	</select>
+	
+	
+	<insert id="saveCreate" parameterType="hashMap">
+	  INSERT INTO board
+		(content, del_date, del_yn, mod_date, reg_date, reg_user, title)
+	  VALUES(#{content}, NULL, 'N', NULL, #{reg_date}, #{reg_user}, #{title})
+	</insert>
+	
+	<update id="saveUpdate" parameterType="hashMap">
+		UPDATE board
+		SET    title=#{title},
+		       reg_date=#{reg_date},
+		       reg_user=#{reg_user},
+		       content=#{content}
+		WHERE  seq = #{seq}
+	</update>
+	
+	<delete id="saveDelete" parameterType="hashMap">
+	   DELETE FROM board WHERE seq = #{seq}
+	</delete>
+	
+	
+	<select id="getGrid2Data" parameterType="hashMap"  resultType="Map">
+	  select 
+			cast(withme_no as char(10)) as withme_no,
+			file_name,
+			cast(date_format(incruit_edate,'%Y-%m-%d') as char(100)) as incruit_edate,
+			incruit_no,
+			incruit_ssts,
+			user_name,
+			withme_content,
+			withme_hit,
+			withme_title 
+		from withme
+	    where incruit_no = #{seq}
+	</select>
+	
+	
+	<select id="getComboData" parameterType="hashMap"  resultType="Map">
+		select cd_item 
+			   ,cd_item_nm 
+			from cmm_code
+	</select>
+	
+	<select id="getCrtData" parameterType="hashMap"  resultType="Map">
+	  select CRT_CD
+			,CRT_NM
+			,CRT_SSTS
+			,CRT_DTM
+			,CRT_CNT
+			from crtprac
+			where 1=1
+		<if test="crt_ssts!=null and crt_ssts!=''">
+		AND CRT_SSTS = #{crt_ssts}
+		</if>
+		<if test="crt_cd!=null and crt_cd!=''">
+		AND CRT_CD like CONCAT('%',#{crt_cd},'%')
+		</if>
+	</select>
+	
+	<select id="getCrtCombo" parameterType="hashMap"  resultType="Map">
+	select cd_no
+		,cd_item
+		,cd_item_nm
+		,cd_group
+		from cmm_code 
+		where 1=1
+		and cd_group = #{cd_group} 
+	</select>
+	
+	<insert id="crtCreate" parameterType="hashMap">
+	  INSERT INTO crtprac
+		(CRT_CD, CRT_NM,CRT_SSTS,CRT_DTM)
+	  VALUES(#{CRT_CD},#{CRT_NM},#{CRT_SSTS},#{CRT_DTM})
+	</insert>
+	
+	<update id="crtUpdate" parameterType="hashMap">
+		UPDATE crtprac 
+		SET    CRT_NM=#{CRT_NM},
+		       CRT_SSTS=#{CRT_SSTS},
+		       CRT_DTM=#{CRT_DTM}
+		WHERE  CRT_CD = #{CRT_CD}
+	</update>
+	
+	<delete id="crtDelete" parameterType="hashMap">
+	   DELETE FROM crtprac WHERE CRT_CD = #{CRT_CD}
+	</delete>
+	
+	<select id="checkId"  parameterType="hashMap"  resultType="Map">
+		select COUNT(*) AS CNT
+		  from member
+		  where member_id = #{id}
+	</select>
+	
+	<insert id="join" parameterType="hashMap">
+	  INSERT INTO member
+		(member_id, password)
+	  VALUES(#{id},#{pw})
+	</insert>
+	
+	<select id="loginTry" parameterType="hashMap"  resultType="Map">
+	select COUNT(*) as CNT
+       ,member_id as ID
+	 from member
+	 where member_id = #{id}
+	 and password = #{pw}
+	</select>
+	
+	
+	<select id="getMail" parameterType="hashMap"  resultType="Map">
+	select 
+		 mail_no
+		,reciever
+		,sender
+		,content
+		,read_yn
+		,send_date
+		,title
+	  from mail
+	  where reciever = #{reciever}
+	</select>
+	
+</mapper>

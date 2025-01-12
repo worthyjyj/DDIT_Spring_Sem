@@ -28,37 +28,43 @@
                     <div class="col-lg-12">
                         <div class="p-5">
                             <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">메일 보내기</h1>
+                                <h1 class="h4 text-gray-900 mb-4">메일 상세</h1>
                             </div>
                             <form class="user" id="sendMail_form">
-                                <div class="form-group row">
-                                    <div class="col-sm-3">
-                                    	<a href="#" class="btn btn-warning btn-icon-split col-sm-12" id="listBtn" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                        <span class="text">받는 사람</span>
-                                    	</a>
-                                    </div>
-                                    <div class="col-sm-9 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="recieverAdd"
-                                            placeholder="받는사람 목록에서 선택해주세요" readonly="readonly"  style="font-size:1.1em;" >
-                                    </div>
-                                </div>
+<!--                                 <div class="form-group row"> -->
+<!--                                     <div class="col-sm-3"> -->
+<!--                                     	<a href="#" class="btn btn-warning btn-icon-split col-sm-12" id="listBtn" data-bs-toggle="modal" data-bs-target="#exampleModal"> -->
+<!--                                         <span class="text">답장하기</span> -->
+<!--                                     	</a> -->
+<!--                                     </div> -->
+<!--                                     <div class="col-sm-9 mb-3 mb-sm-0"> -->
+<!--                                         <input type="text" class="form-control form-control-user" id="recieverAdd" -->
+<!--                                             placeholder="답장 내용을 작성해주세요!" readonly="readonly"  style="font-size:1.1em;" > -->
+<!--                                     </div> -->
+<!--                                 </div> -->
                                 <div class="form-group row">
                                     <div class="col-lg-12">
 		                                <div class="card-header">
+		                                                                                  보낸 사람
 		                                    <input type="text" class="form-control form-control-user" 
-                                            id="title" placeholder="메일 제목" style="font-size:1.0em;">
+                                            id="title" placeholder="메일 제목" style="font-size:1.0em;" value="${param.sender}">
+		                                    <input type="text" class="form-control form-control-user" 
+                                            id="title" placeholder="메일 제목"  value="${param.title}" style="font-size:1.0em;">
 		                                </div>
 		                                <div class="card-body" >
 		                                   <textarea class="form-control form-control-user" 
-                                             id="contents" placeholder="메일 내용" style="height:200px; font-size:1.0em;"> 
+                                             id="contents" placeholder="메일 내용" style="height:200px; font-size:1.0em;" >
+                                             ${param.content}
                                             </textarea>
 		                                </div>
 		                            </div>
                                 </div>
                                 <hr>
-                                <a class="btn btn-primary btn-user btn-block" id="sendBtn">
-                                    메일 전송
-                                </a>
+<!--                               <h5>답장 목록</h5> -->
+<!--                               <div> -->
+<!--                               ????? -->
+<!--                               </div> -->
+                              
                             </form>
                             <hr>
                             <div class="text-center">

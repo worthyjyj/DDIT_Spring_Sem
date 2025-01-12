@@ -272,6 +272,23 @@ public class TestController {
 		return "test/mailDetail";
 	}
 	
+	@GetMapping("/treeView")
+	public String treeView(Model model, @RequestParam Map<String, Object> paramMap) {
+		log.info("/treeView에 왔다");
+		
+		System.out.println("param >> "+ paramMap);
+		
+		return "test/treeView";
+	}
+	
+	@GetMapping("/treeView2")
+	public String treeView2(Model model, @RequestParam Map<String, Object> paramMap) {
+		log.info("/treeView2에 왔다");
+		
+		System.out.println("param >> "+ paramMap);
+		
+		return "test/treeView2";
+	}
 	
 	
 }
