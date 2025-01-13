@@ -50,7 +50,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+                <div class="sidebar-brand-text mx-3">SB Admin<sup>2</sup></div>
             </a>
 
             <!-- Divider -->
@@ -840,6 +840,7 @@ fields[0] = [
 	  {fieldName:"ID", dataType:"text"},
 	  {fieldName:"P_ID", dataType:"text"},
 	  {fieldName:"PATH", dataType:"text"},
+	  {fieldName:"ICONFIELD", dataType:"text"}
 	]
 
 columns[0] = [
@@ -848,26 +849,7 @@ columns[0] = [
 	  {fieldName:"ID", name:"P_ID", width: 50, header:{text:"아이디"}},
 	  {fieldName:"P_ID", name:"P_ID", width: 50, header:{text:"부모아이디"}},
 	  {fieldName:"DEPTH", name:"DEPTH", width: 50, header:{text:"DEPTH"}},
-	];
-	
-fields[1] = [
-		{fieldName:"MENU_NAME", dataType:"text"},
-	  {fieldName:"MENU_ID", dataType:"text"},
-	  {fieldName:"FOLDER_YN", dataType:"text"},
-	  {fieldName:"DEPTH", dataType:"text"},
-	  {fieldName:"ID", dataType:"text"},
-	  {fieldName:"P_ID", dataType:"text"},
-	  {fieldName:"PATH", dataType:"text"},
-	  {fieldName:"SEQ", dataType:"text"},
-	]
-
-columns[1] = [
-	  {fieldName:"MENU_NAME", name:"MENU_NAME", width: 150, header:{text:"메뉴이름"}},
-	  {fieldName:"MENU_ID", name:"MENU_ID", width: 50, header:{text:"메뉴아이디"}},
-	  {fieldName:"ID", name:"P_ID", width: 50, header:{text:"아이디"}},
-	  {fieldName:"P_ID", name:"P_ID", width: 50, header:{text:"부모아이디"}},
-	  {fieldName:"DEPTH", name:"DEPTH", width: 50, header:{text:"DEPTH"}},
-	  {fieldName:"SEQ", name:"SEQ", width: 50, header:{text:"SEQ"}},
+	  {fieldName:"ICONFIELD", name:"ICONFIELD"}
 	];
 
 
@@ -908,6 +890,11 @@ $(function(){
 	            gridView[idx].setDataDropOptions({dropMode: 'copy'});
 	            gridView[idx].onItemChecked = this.onItemChecked;
 	            
+	            gridView[idx].treeOptions.iconImagesRoot = "/resources/realgrid_demo/";
+	            gridView[idx].treeOptions.iconImages = [
+	                "test.png"
+	            ]
+	            gridView[idx].treeOptions.defaultIcon = 0;
 	            
 	         }
 	         
@@ -953,7 +940,8 @@ $(function(){
 	           	    "MENU_NAME": "User Folder",
 	           	    "PATH": "A",
 	           	    "FOLDER_YN" :"Y",
-	           	    "DEPTH" :"0"
+	           	    "DEPTH" :"0",
+	           	    "ICONFIELD": "0"
 	           	  },
 	        	 {
 	           	    "ID": "B",
@@ -1082,7 +1070,7 @@ $(function(){
 	       	 	  
 	       	 ]
 	         console.log(data);
-	         provider[0].setRows(data, "PATH",true, '', "");
+	         provider[0].setRows(data, "PATH",true, '', "iconField");
 	         
 	         gridView[0].expandAll();
 	         
