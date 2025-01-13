@@ -19,6 +19,21 @@
 
     <!-- Custom styles for this template-->
     <link href="/resources/sbadmin2/css/sb-admin-2.min.css" rel="stylesheet">
+    
+     <!-- iFrame -->
+    <link href="/resources/styles/iframe.css" rel="stylesheet" />
+    
+
+    <!-- RealGrid -->
+    <link href="/resources/realgrid_demo/latest/realgrid-style.css" rel="stylesheet" />
+    <script src="/resources/realgrid_demo/latest/realgrid-lic.js"></script>
+    <script src="/resources/realgrid_demo/latest/realgrid.min.js"></script>
+    <script src="/resources/realgrid_demo/latest/libs/jszip.min.js"></script>
+
+    <!-- Custom -->
+    <link href="/resources/index.css" rel="stylesheet" />
+    <script src="/resources/index.js"></script>
+    
 	
 </head>
 
@@ -372,9 +387,31 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                        <a onClick="openPop();" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                                class="fas fa-sm text-white-50"></i>조직도</a>
                     </div>
+                    
+                    <!-- 조직도 레이어 팝업 -->
+                    <div class="popup_layer" id="popup_layer" style="display: none;">
+					  <div class="popup_box">
+					      <div style="height: 10px; width: 375px; float: top;">
+					        <a href="javascript:closePop();"><img src="/resources/ic_close.svg" class="m_header-banner-close" width="30px" height="30px"></a>
+					      </div>
+					      <!--팝업 컨텐츠 영역-->
+					      <div class="popup_cont">
+					       <h5>조직도</h5>
+							 <div class="contPage-body">
+						        <div class="base-list table-list">
+						           <div id="realgrid0" style="width: 100%; height: 630px;"></div>
+						        </div>
+						     </div>
+					      </div>
+					      <!--팝업 버튼 영역-->
+					      <div class="popup_btn" style="float: bottom; margin-top: -40px;">
+					          <a href="javascript:closePop();">닫기</a>
+					      </div>
+					  </div>
+					</div>
 
                     <!-- Content Row -->
                     <div class="row">
@@ -761,8 +798,311 @@
 </body>
 
 </html>
+<style>
+/*popup*/
+.popup_layer {position:fixed;top:0;left:0;z-index: 10000; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.4); }
+/*팝업 박스*/
+.popup_box{position: relative;top:50%;left:50%; overflow: auto; height: 800px; width:600px;transform:translate(-50%, -50%);z-index:1002;box-sizing:border-box;background:#fff;box-shadow: 2px 5px 10px 0px rgba(0,0,0,0.35);-webkit-box-shadow: 2px 5px 10px 0px rgba(0,0,0,0.35);-moz-box-shadow: 2px 5px 10px 0px rgba(0,0,0,0.35);}
+/*컨텐츠 영역*/
+.popup_box .popup_cont {padding:50px;line-height:1.4rem;font-size:14px; }
+.popup_box .popup_cont h2 {padding:15px 0;color:#333;margin:0;}
+.popup_box .popup_cont p{ border-top: 1px solid #666;padding-top: 30px;}
+/*버튼영역*/
+.popup_box .popup_btn {display:table;table-layout: fixed;width:100%;height:70px;background:#ECECEC;word-break: break-word;}
+.popup_box .popup_btn a {position: relative; display: table-cell; height:70px;  font-size:17px;text-align:center;vertical-align:middle;text-decoration:none; background:#ECECEC;}
+.popup_box .popup_btn a:before{content:'';display:block;position:absolute;top:26px;right:29px;width:1px;height:21px;background:#fff;-moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); -o-transform: rotate(-45deg); transform: rotate(-45deg);}
+.popup_box .popup_btn a:after{content:'';display:block;position:absolute;top:26px;right:29px;width:1px;height:21px;background:#fff;-moz-transform: rotate(45deg); -webkit-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg);}
+.popup_box .popup_btn a.close_day {background:#5d5d5d;}
+.popup_box .popup_btn a.close_day:before, .popup_box .popup_btn a.close_day:after{display:none;}
+/*오버레이 뒷배경*/
+.popup_overlay{position:fixed;top:0px;right:0;left:0;bottom:0;z-index:1001;;background:rgba(0,0,0,0.5);}
+/*popup*/
+
+#realgrid {
+  width: 100%;
+  height: 450px; /* for WebKit */
+}
+</style>
+
 
 <script>
-console.log("개똥이");
+var provider = [];
+var gridView = [];
+var fields = [];
+var columns = [];
+var layout = [];
+
+fields[0] = [
+	  {fieldName:"MENU_NAME", dataType:"text"},
+	  {fieldName:"MENU_ID", dataType:"text"},
+	  {fieldName:"FOLDER_YN", dataType:"text"},
+	  {fieldName:"DEPTH", dataType:"text"},
+	  {fieldName:"ID", dataType:"text"},
+	  {fieldName:"P_ID", dataType:"text"},
+	  {fieldName:"PATH", dataType:"text"},
+	]
+
+columns[0] = [
+	  {fieldName:"MENU_NAME", name:"MENU_NAME", width: 150, header:{text:"메뉴이름"}},
+	  {fieldName:"MENU_ID", name:"MENU_ID", width: 50, header:{text:"메뉴아이디"}},
+	  {fieldName:"ID", name:"P_ID", width: 50, header:{text:"아이디"}},
+	  {fieldName:"P_ID", name:"P_ID", width: 50, header:{text:"부모아이디"}},
+	  {fieldName:"DEPTH", name:"DEPTH", width: 50, header:{text:"DEPTH"}},
+	];
+	
+fields[1] = [
+		{fieldName:"MENU_NAME", dataType:"text"},
+	  {fieldName:"MENU_ID", dataType:"text"},
+	  {fieldName:"FOLDER_YN", dataType:"text"},
+	  {fieldName:"DEPTH", dataType:"text"},
+	  {fieldName:"ID", dataType:"text"},
+	  {fieldName:"P_ID", dataType:"text"},
+	  {fieldName:"PATH", dataType:"text"},
+	  {fieldName:"SEQ", dataType:"text"},
+	]
+
+columns[1] = [
+	  {fieldName:"MENU_NAME", name:"MENU_NAME", width: 150, header:{text:"메뉴이름"}},
+	  {fieldName:"MENU_ID", name:"MENU_ID", width: 50, header:{text:"메뉴아이디"}},
+	  {fieldName:"ID", name:"P_ID", width: 50, header:{text:"아이디"}},
+	  {fieldName:"P_ID", name:"P_ID", width: 50, header:{text:"부모아이디"}},
+	  {fieldName:"DEPTH", name:"DEPTH", width: 50, header:{text:"DEPTH"}},
+	  {fieldName:"SEQ", name:"SEQ", width: 50, header:{text:"SEQ"}},
+	];
+
+
+$(function(){
+	
+	   ORG_TREE = {
+	      
+	     init : function() {
+	         this.initGrid();
+	         this.initEvent();
+	         this.initCombo();
+	         this.initDisp();
+	         ORG_TREE.search();
+	      }
+	   , initGrid : function() {
+	         for (var idx = 0; idx < 1; idx++) {
+	            provider[idx] = new RealGrid.LocalTreeDataProvider();
+	            gridView[idx] = new RealGrid.TreeView("realgrid" + idx);
+	            provider[idx].setFields(fields[idx]);
+	            gridView[idx].setDataSource(provider[idx]);
+	            gridView[idx].headerSummaries.visible = false;
+	            gridView[idx].setRowIndicator({visible: false});
+	            gridView[idx].setStateBar({visible: false});
+	            gridView[idx].setCheckBar({visible: true});
+	            gridView[idx].setFooters({visible: false});
+	            gridView[idx].displayOptions.columnMovable = false;
+	            gridView[idx].displayOptions.selectionStyle = 'rows';
+	            gridView[idx].displayOptions.fitStyle = 'fill';
+	            gridView[idx].setColumns(columns[idx]);
+	            gridView[idx].setColumnLayout(layout[idx]); 
+	            gridView[idx].setEditOptions({editable: false});
+	            gridView[idx].onCellDblClicked = this.onCellDblClicked;
+	            gridView[idx].onCellClicked = this.onCellClicked;
+	            gridView[idx].onCopy = this.onCopy;
+	            gridView[idx].onTreeItemExpanding = this.onTreeItemExpanding;
+	            gridView[idx].sortMode = "explicit";
+	            gridView[idx].editOptions.movable = true;
+	            gridView[idx].setDataDropOptions({dropMode: 'copy'});
+	            gridView[idx].onItemChecked = this.onItemChecked;
+	            
+	            
+	         }
+	         
+	         gridView[0].onItemAllChecked = function (grid, checked) {
+	        	    console.log("onItemAllChecked: " + checked);
+	         }
+	         
+	      }
+	    
+	      , onCellDblClicked : function(grid, clickData) {
+	    	  
+	    	  
+	      }
+	      ,onCellClicked : function(grid, clickData) {
+	    	  
+	      }
+
+	      , initEvent : function() {
+	      }
+	      
+	      , initCombo : function() {
+	         
+	      }
+	      
+	      , callback : function(svcID, data) {
+	         switch(svcID) {
+	            case '' :
+	               break;
+	         }
+	      }
+	      
+	      , initDisp : function() {
+	      }
+	      , search : function(){
+	    	 
+	         console.log("ㅇㄱ");
+	         
+	         let data = [
+	        	 {
+	           	    "ID": "A",
+	           	    "P_ID": "",
+	           	    "MENU_ID": "leftMenu1",
+	           	    "MENU_NAME": "User Folder",
+	           	    "PATH": "A",
+	           	    "FOLDER_YN" :"Y",
+	           	    "DEPTH" :"0"
+	           	  },
+	        	 {
+	           	    "ID": "B",
+	           	    "P_ID": "A",
+	           	    "MENU_ID": "leftMenu2",
+	           	    "MENU_NAME": "출하 모니터링",
+	           	    "PATH": "A.B",
+	           	 	"FOLDER_YN" :"N",
+	           	    "DEPTH" :"1"
+	           	  },
+	        	 {
+	           	    "ID": "C",
+	           	    "P_ID": "A",
+	           	    "MENU_ID": "leftMenu3",
+	           	    "MENU_NAME": "가류 D/B 사용 결과",
+	           	    "PATH": "A.C",
+	           	 	"FOLDER_YN" :"N",
+	           	    "DEPTH" :"1"
+	           	  },
+	        	 {
+	           	    "ID": "D",
+	           	    "P_ID": "A",
+	           	    "MENU_ID": "leftMenu4",
+	           	    "MENU_NAME": "메뉴 화면 관리",
+	           	    "PATH": "A.D",
+	           	 	"FOLDER_YN" :"N",
+	           	    "DEPTH" :"1"
+	           	  },
+	        	 {
+	           	    "ID": "E",
+	           	    "P_ID": "A",
+	           	    "MENU_ID": "leftMenu5",
+	           	    "MENU_NAME": "외관 검사자별 검사현황",
+	           	    "PATH": "A.E",
+	           	 	"FOLDER_YN" :"N",
+	           	    "DEPTH" :"1"
+	           	  },
+	        	 {
+	           	    "ID": "F",
+	           	    "P_ID": "A",
+	           	    "MENU_ID": "leftMenu6",
+	           	    "MENU_NAME": "출하 모니터링",
+	           	    "PATH": "A.F",
+	           	 	"FOLDER_YN" :"N",
+	           	    "DEPTH" :"1"
+	           	  },
+	        	 {
+	           	    "ID": "G",
+	           	    "P_ID": "A",
+	           	    "MENU_ID": "leftMenu7",
+	           	    "MENU_NAME": "생산속보",
+	           	    "PATH": "A.G",
+	           	 	"FOLDER_YN" :"N",
+	           	    "DEPTH" :"1"
+	           	  },
+	        	 {
+	           	    "ID": "H",
+	           	    "P_ID": "A",
+	           	    "MENU_ID": "leftMenu8",
+	           	    "MENU_NAME": "폴더2",
+	           	    "PATH": "A.H",
+	           	 	"FOLDER_YN" :"Y",
+	           	    "DEPTH" :"1"
+	           	  },
+	        	 {
+	           	    "ID": "I",
+	           	    "P_ID": "H",
+	           	    "MENU_ID": "leftMenu9",
+	           	    "MENU_NAME": "폴더2-??",
+	           	    "PATH": "A.H.I",
+	           	 	"FOLDER_YN" :"N",
+	           	    "DEPTH" :"2"
+	           	  },
+	        	 {
+	           	    "ID": "J",
+	           	    "P_ID": "",
+	           	    "MENU_ID": "leftMenu10",
+	           	    "MENU_NAME": "11",
+	           	    "PATH": "J",
+	           	 	"FOLDER_YN" :"Y",
+	           	    "DEPTH" :"0"
+	           	  },
+	        	 {
+	           	    "ID": "K",
+	           	    "P_ID": "J",
+	           	    "MENU_ID": "leftMenu11",
+	           	    "MENU_NAME": "재사용 브라더 재고 관리",
+	           	    "PATH": "J.K",
+	           	 	"FOLDER_YN" :"N",
+	           	    "DEPTH" :"1"
+	           	  }
+	        	
+	         ]
+
+	         let data2 = [
+	       	 	  {
+	           	    "ID": "EM230405-DP-0",
+	           	    "P_ID": "",
+	           	    "MENU_ID": "rightMenu1",
+	           	    "MENU_NAME": "최상위폴더1",
+	           	    "PATH": "EM2304050",
+	           	 	"FOLDER_YN" :"Y",
+	           	    "DEPTH" :"0",
+	           	    "SEQ"	:"0"
+	           	  },
+	       	 	  {
+	           	    "ID": "EM230405-DP-6",
+	           	    "P_ID": "EM230405-DP-0",
+	           	    "MENU_ID": "rightMenu1",
+	           	    "MENU_NAME": "메뉴1",
+	           	    "PATH": "EM2304050.EM2304056",
+	           	 	"FOLDER_YN" :"N",
+	           	    "DEPTH" :"1",
+	           	    "SEQ"	:"0"
+	           	  }
+	       	 	  ,{
+	           	    "ID": "??",
+	           	    "P_ID": "",
+	           	    "MENU_ID": "rightMenu2",
+	           	    "MENU_NAME": "최상위폴더2",
+	           	    "PATH": "EM2304051",
+	           	 	"FOLDER_YN" :"Y",
+	           	    "DEPTH" :"0",
+	           	    "SEQ"	:"0"
+	           	  }
+	       	 	  
+	       	 ]
+	         console.log(data);
+	         provider[0].setRows(data, "PATH",true, '', "");
+	         
+	         gridView[0].expandAll();
+	         
+
+	      }
+	      
+	   };
+	      
+	   ORG_TREE.init();
+})
+
+	//팝업 띄우기
+	function openPop() {
+	    document.getElementById("popup_layer").style.display = "block";
+
+	}
+	
+	//팝업 닫기
+	function closePop() {
+	    document.getElementById("popup_layer").style.display = "none";
+	}	
 
 </script>
