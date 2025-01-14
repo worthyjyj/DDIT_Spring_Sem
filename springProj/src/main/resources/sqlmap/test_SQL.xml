@@ -148,4 +148,44 @@
 	  where reciever = #{reciever}
 	</select>
 	
+	
+	<select id="getDeptTree" parameterType="hashMap"  resultType="Map">
+	WITH RECURSIVE CTE AS (
+	    select 
+	      dept_id,
+	      dept_name,
+	      p_id,
+	      dept_id as ID_PATH,
+	      1 as level,
+	      icon_field,
+	      dept_seq
+	    from dept
+	    where 
+	      P_ID is null -- 최상위(한국타이어)
+	    
+	    union all
+	    
+	    select
+	      P.dept_id,
+	      P.dept_name,
+	      P.p_id,
+	      concat(CTE.id_path,'.',P.dept_id) as ID_PATH,
+	      1+level as level,
+	      P.icon_field,
+	      P.dept_seq
+	    from dept P
+	    inner join CTE on P.p_id = CTE.dept_id
+        )
+		  select 
+		    CONCAT(LPAD('    ',2*(level-1),' '),dept_id) as ID,
+		    p_id as P_ID,
+		    DEPT_NAME,
+		    ID_PATH,
+		    LEVEL,
+		    icon_field as ICONFIELD,
+		    dept_seq
+		  from CTE
+		  ORDER BY ID_PATH
+	</select>
+	
 </mapper>

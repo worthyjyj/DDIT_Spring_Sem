@@ -28,5 +28,7 @@ public interface TestService {
 
 	public List<HashMap<String, Object>> getMail(Map<String, Object> paramMap);
 
+	public List<HashMap<String, Object>> getDeptTree(Map<String, Object> paramMap);
+
 	
 }

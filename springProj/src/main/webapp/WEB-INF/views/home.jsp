@@ -34,6 +34,9 @@
     <link href="/resources/index.css" rel="stylesheet" />
     <script src="/resources/index.js"></script>
     
+    <link rel="stylesheet" type="text/css" href="/resources/css/front.css" />
+     <link href="/resources/realgrid/realgrid-style.css" rel="stylesheet" />
+    
 	
 </head>
 
@@ -400,6 +403,28 @@
 					      <!--팝업 컨텐츠 영역-->
 					      <div class="popup_cont">
 					       <h5>조직도</h5>
+					         <!-- 검색 div 시작  -->
+					         <div class="contPage-search searchSHWrap" id="div_form_crtPrac">
+								<div class="border-box searchReq-box">
+									<div class="searchReq-tablebox">
+										<table>
+											<colgroup>
+												<col style="width: 5%;" />
+												<col style="width: 10%;" />
+											</colgroup>
+											<tr>
+												<th><span class="label-dot">검색</span></th>
+												<td>
+													<div style="width: calc(100% - 50px)">
+														<input type="text" class="crt_cd" id="crt_cd" name="crt_cd" value="" style="width: 100%;"/>
+													</div>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+					         
 							 <div class="contPage-body">
 						        <div class="base-list table-list">
 						           <div id="realgrid0" style="width: 100%; height: 630px;"></div>
@@ -833,23 +858,17 @@ var columns = [];
 var layout = [];
 
 fields[0] = [
-	  {fieldName:"MENU_NAME", dataType:"text"},
-	  {fieldName:"MENU_ID", dataType:"text"},
-	  {fieldName:"FOLDER_YN", dataType:"text"},
-	  {fieldName:"DEPTH", dataType:"text"},
 	  {fieldName:"ID", dataType:"text"},
 	  {fieldName:"P_ID", dataType:"text"},
-	  {fieldName:"PATH", dataType:"text"},
-	  {fieldName:"ICONFIELD", dataType:"text"}
+	  {fieldName:"DEPT_NAME", dataType:"text"},
+	  {fieldName:"ID_PATH", dataType:"text"},
+	  {fieldName:"LEVEL", dataType:"text"},
+	  {fieldName:"ICONFIELD", dataType:"text"},
+	  {fieldName:"DEPT_SEQ", dataType:"text"}
 	]
 
 columns[0] = [
-	  {fieldName:"MENU_NAME", name:"MENU_NAME", width: 150, header:{text:"메뉴이름"}},
-	  {fieldName:"MENU_ID", name:"MENU_ID", width: 50, header:{text:"메뉴아이디"}},
-	  {fieldName:"ID", name:"P_ID", width: 50, header:{text:"아이디"}},
-	  {fieldName:"P_ID", name:"P_ID", width: 50, header:{text:"부모아이디"}},
-	  {fieldName:"DEPTH", name:"DEPTH", width: 50, header:{text:"DEPTH"}},
-	  {fieldName:"ICONFIELD", name:"ICONFIELD"}
+	  {fieldName:"DEPT_NAME", name:"DEPT_NAME", width: 150, header:{text:"부서"}}
 	];
 
 
@@ -892,9 +911,9 @@ $(function(){
 	            
 	            gridView[idx].treeOptions.iconImagesRoot = "/resources/realgrid_demo/";
 	            gridView[idx].treeOptions.iconImages = [
-	                "test.png"
+	                "test.png","team.png","group.png","emp.png"
 	            ]
-	            gridView[idx].treeOptions.defaultIcon = 0;
+	            gridView[idx].treeOptions.defaultIcon = 3;
 	            
 	         }
 	         
@@ -930,149 +949,31 @@ $(function(){
 	      }
 	      , search : function(){
 	    	 
-	         console.log("ㅇㄱ");
+	         var param = {};
+		        
+	           $.ajax({
+	               url: "/test/getDeptTree",
+	               contentType: "application/json;charset=utf-8",
+	               type: "post",
+	               data: JSON.stringify(param),
+	               dataType: "json",
+	               beforeSend: function (xhr) {
+	               xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	               },
+	               async: false,
+	               success: function (result) {
+	            	   
+	            	   console.log(result);
+	            	   provider[0].setRows(result, "ID_PATH",true, '', "ICONFIELD");
+	      	         
+	      	           gridView[0].expandAll();
+						
+	               }
+	           });
 	         
-	         let data = [
-	        	 {
-	           	    "ID": "A",
-	           	    "P_ID": "",
-	           	    "MENU_ID": "leftMenu1",
-	           	    "MENU_NAME": "User Folder",
-	           	    "PATH": "A",
-	           	    "FOLDER_YN" :"Y",
-	           	    "DEPTH" :"0",
-	           	    "ICONFIELD": "0"
-	           	  },
-	        	 {
-	           	    "ID": "B",
-	           	    "P_ID": "A",
-	           	    "MENU_ID": "leftMenu2",
-	           	    "MENU_NAME": "출하 모니터링",
-	           	    "PATH": "A.B",
-	           	 	"FOLDER_YN" :"N",
-	           	    "DEPTH" :"1"
-	           	  },
-	        	 {
-	           	    "ID": "C",
-	           	    "P_ID": "A",
-	           	    "MENU_ID": "leftMenu3",
-	           	    "MENU_NAME": "가류 D/B 사용 결과",
-	           	    "PATH": "A.C",
-	           	 	"FOLDER_YN" :"N",
-	           	    "DEPTH" :"1"
-	           	  },
-	        	 {
-	           	    "ID": "D",
-	           	    "P_ID": "A",
-	           	    "MENU_ID": "leftMenu4",
-	           	    "MENU_NAME": "메뉴 화면 관리",
-	           	    "PATH": "A.D",
-	           	 	"FOLDER_YN" :"N",
-	           	    "DEPTH" :"1"
-	           	  },
-	        	 {
-	           	    "ID": "E",
-	           	    "P_ID": "A",
-	           	    "MENU_ID": "leftMenu5",
-	           	    "MENU_NAME": "외관 검사자별 검사현황",
-	           	    "PATH": "A.E",
-	           	 	"FOLDER_YN" :"N",
-	           	    "DEPTH" :"1"
-	           	  },
-	        	 {
-	           	    "ID": "F",
-	           	    "P_ID": "A",
-	           	    "MENU_ID": "leftMenu6",
-	           	    "MENU_NAME": "출하 모니터링",
-	           	    "PATH": "A.F",
-	           	 	"FOLDER_YN" :"N",
-	           	    "DEPTH" :"1"
-	           	  },
-	        	 {
-	           	    "ID": "G",
-	           	    "P_ID": "A",
-	           	    "MENU_ID": "leftMenu7",
-	           	    "MENU_NAME": "생산속보",
-	           	    "PATH": "A.G",
-	           	 	"FOLDER_YN" :"N",
-	           	    "DEPTH" :"1"
-	           	  },
-	        	 {
-	           	    "ID": "H",
-	           	    "P_ID": "A",
-	           	    "MENU_ID": "leftMenu8",
-	           	    "MENU_NAME": "폴더2",
-	           	    "PATH": "A.H",
-	           	 	"FOLDER_YN" :"Y",
-	           	    "DEPTH" :"1"
-	           	  },
-	        	 {
-	           	    "ID": "I",
-	           	    "P_ID": "H",
-	           	    "MENU_ID": "leftMenu9",
-	           	    "MENU_NAME": "폴더2-??",
-	           	    "PATH": "A.H.I",
-	           	 	"FOLDER_YN" :"N",
-	           	    "DEPTH" :"2"
-	           	  },
-	        	 {
-	           	    "ID": "J",
-	           	    "P_ID": "",
-	           	    "MENU_ID": "leftMenu10",
-	           	    "MENU_NAME": "11",
-	           	    "PATH": "J",
-	           	 	"FOLDER_YN" :"Y",
-	           	    "DEPTH" :"0"
-	           	  },
-	        	 {
-	           	    "ID": "K",
-	           	    "P_ID": "J",
-	           	    "MENU_ID": "leftMenu11",
-	           	    "MENU_NAME": "재사용 브라더 재고 관리",
-	           	    "PATH": "J.K",
-	           	 	"FOLDER_YN" :"N",
-	           	    "DEPTH" :"1"
-	           	  }
-	        	
-	         ]
-
-	         let data2 = [
-	       	 	  {
-	           	    "ID": "EM230405-DP-0",
-	           	    "P_ID": "",
-	           	    "MENU_ID": "rightMenu1",
-	           	    "MENU_NAME": "최상위폴더1",
-	           	    "PATH": "EM2304050",
-	           	 	"FOLDER_YN" :"Y",
-	           	    "DEPTH" :"0",
-	           	    "SEQ"	:"0"
-	           	  },
-	       	 	  {
-	           	    "ID": "EM230405-DP-6",
-	           	    "P_ID": "EM230405-DP-0",
-	           	    "MENU_ID": "rightMenu1",
-	           	    "MENU_NAME": "메뉴1",
-	           	    "PATH": "EM2304050.EM2304056",
-	           	 	"FOLDER_YN" :"N",
-	           	    "DEPTH" :"1",
-	           	    "SEQ"	:"0"
-	           	  }
-	       	 	  ,{
-	           	    "ID": "??",
-	           	    "P_ID": "",
-	           	    "MENU_ID": "rightMenu2",
-	           	    "MENU_NAME": "최상위폴더2",
-	           	    "PATH": "EM2304051",
-	           	 	"FOLDER_YN" :"Y",
-	           	    "DEPTH" :"0",
-	           	    "SEQ"	:"0"
-	           	  }
-	       	 	  
-	       	 ]
-	         console.log(data);
-	         provider[0].setRows(data, "PATH",true, '', "iconField");
 	         
-	         gridView[0].expandAll();
+	         
+	         
 	         
 
 	      }

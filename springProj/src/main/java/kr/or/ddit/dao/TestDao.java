@@ -86,6 +86,10 @@ public class TestDao {
 
 	public List<HashMap<String, Object>> getMail(Map<String, Object> paramMap) {
 		return this.sqlSessionTemplate.selectList("test.getMail",paramMap); 
+	}
+
+	public List<HashMap<String, Object>> getDeptTree(Map<String, Object> paramMap) {
+		return this.sqlSessionTemplate.selectList("test.getDeptTree",paramMap); 
 	} 
 	
 }

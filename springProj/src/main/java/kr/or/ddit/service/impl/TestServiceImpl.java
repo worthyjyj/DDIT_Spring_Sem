@@ -137,5 +137,10 @@ public class TestServiceImpl implements TestService {
 	public List<HashMap<String, Object>> getMail(Map<String, Object> paramMap) {
 		return this.testDao.getMail(paramMap); 
 	}
+
+	@Override
+	public List<HashMap<String, Object>> getDeptTree(Map<String, Object> paramMap) {
+		return this.testDao.getDeptTree(paramMap); 
+	}
 	
 	}
