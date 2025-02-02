@@ -965,6 +965,9 @@ $(function(){
 	            	   
 	            	   console.log(result);
 	            	   provider[0].setRows(result, "ID_PATH",true, '', "ICONFIELD");
+	            	   
+	            	   //각 부서원 트리 그리기
+	            	   ORG_TREE.search2();
 	      	         
 	      	           gridView[0].expandAll();
 						
@@ -976,6 +979,55 @@ $(function(){
 	         
 	         
 
+	      }
+	      ,search2: function(){
+	    	  
+	    	  var param = {};
+           
+	    	  //emp 데이터 받아오기
+// 	    	   $.ajax({
+// 	               url: "/test/getDeptTree",
+// 	               contentType: "application/json;charset=utf-8",
+// 	               type: "post",
+// 	               data: JSON.stringify(param),
+// 	               dataType: "json",
+// 	               beforeSend: function (xhr) {
+// 	               xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+// 	               },
+// 	               async: false,
+// 	               success: function (result) {
+	            	   
+// 	            	   console.log(result);
+// 	            	   provider[0].setRows(result, "ID_PATH",true, '', "ICONFIELD");
+	            	   
+// 	            	   //각 부서원 트리 그리기
+// 	            	   ORG_TREE.search2();
+	      	         
+// 	      	           gridView[0].expandAll();
+						
+// 	               }
+// 	           });
+	    	  
+	    	  
+	    	   //setTimeout을 해주는 이유? -> 위에서 비동기 데이터를 받아온 후 작업할 때 순서가 안맞아서 searchcell 실행 오류 이슈 
+		       setTimeout(() => {
+		    	   var values = [newId, parentRowId, "신희재", "", "", "", ""];  // 필드 순서대로 값 입력
+		    	 
+		    	   //emp데이터 돌려서 각 index 찾고 values 세팅 해주면 될 것 같음..
+		    	   
+		    	   
+				   var index = gridView[0].searchCell({
+				      fields: ["ID"],
+				      value: "dept_00009"
+				   });
+				
+				    console.log("index >> ", index);
+				   
+					var childId = provider[0].addChildRow(index, values, 0, true);
+				   
+				}, 500);  // 0.5초 후 실행
+
+      
 	      }
 	      
 	   };

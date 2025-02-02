@@ -177,7 +177,7 @@
 	    inner join CTE on P.p_id = CTE.dept_id
         )
 		  select 
-		    CONCAT(LPAD('    ',2*(level-1),' '),dept_id) as ID,
+		    dept_id as ID,
 		    p_id as P_ID,
 		    DEPT_NAME,
 		    ID_PATH,
