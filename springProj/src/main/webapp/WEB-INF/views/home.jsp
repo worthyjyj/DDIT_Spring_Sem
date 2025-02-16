@@ -1011,11 +1011,12 @@ $(function(){
 	    	  
 	    	   //setTimeout을 해주는 이유? -> 위에서 비동기 데이터를 받아온 후 작업할 때 순서가 안맞아서 searchcell 실행 오류 이슈 
 		       setTimeout(() => {
+		           console.log("뭐야 여기 안와?");
+		           console.log("코드 바로 수정되는지 확인");
 		    	   var values = [newId, parentRowId, "신희재", "", "", "", ""];  // 필드 순서대로 값 입력
 		    	 
 		    	   //emp데이터 돌려서 각 index 찾고 values 세팅 해주면 될 것 같음..
-		    	   
-		    	   
+
 				   var index = gridView[0].searchCell({
 				      fields: ["ID"],
 				      value: "dept_00009"
