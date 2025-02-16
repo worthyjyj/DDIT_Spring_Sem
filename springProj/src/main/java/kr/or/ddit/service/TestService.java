@@ -30,5 +30,7 @@ public interface TestService {
 
 	public List<HashMap<String, Object>> getDeptTree(Map<String, Object> paramMap);
 
+	List<HashMap<String, Object>> getDeptTree2(Map<String, Object> paramMap);
+
 	
 }

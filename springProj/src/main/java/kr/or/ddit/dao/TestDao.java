@@ -90,6 +90,10 @@ public class TestDao {
 
 	public List<HashMap<String, Object>> getDeptTree(Map<String, Object> paramMap) {
 		return this.sqlSessionTemplate.selectList("test.getDeptTree",paramMap); 
+	}
+	
+	public List<HashMap<String, Object>> getDeptTree2(Map<String, Object> paramMap) {
+		return this.sqlSessionTemplate.selectList("test.getDeptTree2",paramMap); 
 	} 
 	
 }

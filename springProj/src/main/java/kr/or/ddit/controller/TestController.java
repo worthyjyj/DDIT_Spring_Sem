@@ -301,6 +301,18 @@ public class TestController {
 		return getDeptTree;
 	}
 	
+	@ResponseBody
+	@PostMapping("/getDeptTree2")
+	public List<HashMap<String, Object>> getDeptTree2(@RequestBody Map<String, Object> paramMap) {
+		log.info("getDeptTree2에 왔다");
+		
+		List<HashMap<String, Object>> getDeptTree2 = testService.getDeptTree2(paramMap);
+		
+		return getDeptTree2;
+	}
+	
+	
+	
 }
 
 

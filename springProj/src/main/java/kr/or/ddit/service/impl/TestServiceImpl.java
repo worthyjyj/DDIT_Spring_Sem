@@ -143,4 +143,9 @@ public class TestServiceImpl implements TestService {
 		return this.testDao.getDeptTree(paramMap); 
 	}
 	
+	@Override
+	public List<HashMap<String, Object>> getDeptTree2(Map<String, Object> paramMap) {
+		return this.testDao.getDeptTree2(paramMap); 
+	}
+	
 	}

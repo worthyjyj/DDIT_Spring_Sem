@@ -188,4 +188,16 @@
 		  ORDER BY ID_PATH
 	</select>
 	
+	<select id="getDeptTree2" parameterType="hashMap"  resultType="Map">
+		select 
+			emp_id
+			,dept_id
+			,position_id
+			,emp_name
+			,emp_email
+			,emp_ssts
+			,emp_phone
+		from emp
+	</select>
+	
 </mapper>
