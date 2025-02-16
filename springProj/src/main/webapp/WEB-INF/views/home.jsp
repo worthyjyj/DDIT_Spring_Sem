@@ -1002,20 +1002,19 @@ $(function(){
 	            	   //setTimeout을 해주는 이유? -> 위에서 비동기 데이터를 받아온 후 작업할 때 순서가 안맞아서 searchcell 실행 오류 이슈 
 	    		       setTimeout(() => {
 // 	    		    	   var values = [newId, parentRowId, "신희재", "", "", "", ""];  // 필드 순서대로 값 입력
-						  
-	    		    	 
-	    		    	   //emp데이터 돌려서 각 index 찾고 values 세팅 해주면 될 것 같음..
-	    		    	   //근데 여기서 오류가 나는게 .. 하나 추가하면 순서가 밀려서 itemIndex를 제대로 못찾는거같음
-	    		    	   // 그리고 addChildRow 이걸 쓰는게 아닌 거 같음. 필드 아이템가
+
 	    		    	   for(let i=0; i<result.length; i++){
 	    		    		   var values = [];
 
 	    		    		   console.log("result[i].dept_id >> ", result[i].dept_id);
+
+                               // gridView[0].refresh();
+
 	    		    		   var index = gridView[0].searchCell({
 	 	    				      fields: ["ID"],
 	 	    				      value: result[i].dept_id
 	 	    				   });
-	    		    		   
+
 	    		    		   values.push(result[i].emp_id);
 	    		    		   values.push(result[i].dept_id);
 	    		    		   values.push(result[i].emp_name);
@@ -1023,36 +1022,39 @@ $(function(){
 	    		    		   values.push("");
 	    		    		   values.push("");
 	    		    		   values.push("");
-	    		    		   console.log("index >> ", index);
-	    		    		   console.log("index.itemIndex >> ", index.itemIndex);
-	    		    		   var childId = provider[0].addChildRow(index.itemIndex, values, 0, false);
+	    		    		   console.log("index >> ", index.itemIndex);
+	    		    		   console.log("index.itemIndex+1 >> ", index.itemIndex+1);
+
+                              // 이상하게 들어가는게.. 이해가안감..
+	    		    		   var childId = provider[0].addChildRow(index.itemIndex+1, values, 0, false);
+
 	    		    	   }
-	    				   
+
 	    				}, 500);  // 0.5초 후 실행
-	      	         
+
 	      	           gridView[0].expandAll();
-						
+
 	               }
 	           });
 	    	  
 	    	  
 	    	   //setTimeout을 해주는 이유? -> 위에서 비동기 데이터를 받아온 후 작업할 때 순서가 안맞아서 searchcell 실행 오류 이슈 
-		       setTimeout(() => {
+		       /*setTimeout(() => {
 		    	   var values = [newId, parentRowId, "신희재", "", "", "", ""];  // 필드 순서대로 값 입력
-		    	 
+
 		    	   //emp데이터 돌려서 각 index 찾고 values 세팅 해주면 될 것 같음..
-		    	   
-		    	   
+
+
 				   var index = gridView[0].searchCell({
 				      fields: ["ID"],
 				      value: "dept_00009"
 				   });
-				
+
 				    console.log("index >> ", index);
-				   
+
 					var childId = provider[0].addChildRow(index, values, 0, true);
-				   
-				}, 500);  // 0.5초 후 실행
+
+				}, 500);  // 0.5초 후 실행*/
 
       
 	      }
