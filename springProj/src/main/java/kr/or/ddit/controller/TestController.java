@@ -311,6 +311,14 @@ public class TestController {
 		return getDeptTree2;
 	}
 	
+	@GetMapping("/chartPrac")
+	public String chartPrac(Model model, @RequestParam Map<String, Object> paramMap) {
+		log.info("/chartPrac에 왔다");
+		
+		
+		return "test/chartPrac";
+	}
+	
 	
 	
 }
