@@ -196,14 +196,14 @@ function setChart(){
 					}
 				}
 			}
-			],
-			series: [{
-				name: 'value',
-				data: [],
-				lineWidth: 1,
-				color: 'red',
-				yAxis: 0
-			}]
+			]
+// 			series: [{
+// 				name: 'value',
+// 				data: [],
+// 				lineWidth: 1,
+// 				color: 'red',
+// 				yAxis: 0
+// 			}]
 		});
 	}
 }
@@ -345,6 +345,7 @@ $(function() {
 			
 			
 			crtPrac.search();
+			crtPrac.searchChart();
 
 		}
 
@@ -406,6 +407,31 @@ $(function() {
 
 
 		}
+		, searchChart : function() {
+
+			console.log("하이차트 데이터 세팅");
+			
+			//시리즈 세팅
+			for(let i=0; i<3; i++){
+				chart[0].addSeries({
+				    name: '새로운 라인',
+				    type: 'spline',
+				    color: '#FF0000',
+				    data: []
+				});	
+			}
+			
+			var arr = [["20240612343435",80],["20240612343435",50]];
+			var arr2 = [["20240612343435",10],["20240612343437",100]];
+			var arr3 = [["20240612343435",60],["20240612343437",20]];
+
+
+			chart[0].series[0].setData(arr);
+			chart[0].series[1].setData(arr2);
+			chart[0].series[2].setData(arr3);
+			
+
+			}
 		, save : function() {
 			var idx = 0;
 			gridView[idx].commit();
