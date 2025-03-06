@@ -37,12 +37,12 @@
 		<h2 class="title itype1" >운반구 조회 및 등록</h2>
 	</div>
 	<div class="btnbox fr">
-		<a href="javascript:void(0);" data-fc-auth="w" class="btn-ix" onclick="crtPrac.save();"><span class="txt">저장</span></a>
-		<a href="javascript:void(0);" data-fc-auth="r" class="btn-ix" onclick="crtPrac.search();"><span class="txt">조회</span></a>
+		<a href="javascript:void(0);" data-fc-auth="w" class="btn-ix" onclick="chartPrac.save();"><span class="txt">저장</span></a>
+		<a href="javascript:void(0);" data-fc-auth="r" class="btn-ix" onclick="chartPrac.search();"><span class="txt">조회</span></a>
 	</div>
 </div>
 
-<div class="contPage-search searchSHWrap" id="div_form_crtPrac">
+<div class="contPage-search searchSHWrap" id="div_form_chartPrac">
 	<div class="border-box searchReq-box">
 		<div class="searchReq-tablebox">
 			<table>
@@ -213,7 +213,7 @@ function setChart(){
 
 $(function() {
 
-	crtPrac = {
+	chartPrac = {
 		init : function() {
 			this.initGrid();
 			this.initEvent();
@@ -344,8 +344,7 @@ $(function() {
 			
 			
 			
-			crtPrac.search();
-			crtPrac.searchChart();
+			chartPrac.search();
 
 		}
 
@@ -364,7 +363,7 @@ $(function() {
 		$(".overlay").show();
 
         // 파라미터 세팅
-//         this.searchCond = $( '#div_form_crtPrac' ).serializeJson(); serializeJson 함수가 안됨;
+//         this.searchCond = $( '#div_form_chartPrac' ).serializeJson(); serializeJson 함수가 안됨;
         
 		var param = {
 			"crt_ssts" : $("#crt_ssts").val(), 
@@ -399,6 +398,9 @@ $(function() {
                 	   
                 	   //라인형 차트 함수 호출
                 	   chart1(getCrtData);
+                	   
+                	   //하이차트 함수 호출
+                	   chartPrac.searchChart(getCrtData);
 	                   
                    }
                    
@@ -407,28 +409,70 @@ $(function() {
 
 
 		}
-		, searchChart : function() {
+		, searchChart : function(data) {
 
-			console.log("하이차트 데이터 세팅");
+			console.log("하이차트 데이터 세팅 !!!>> ", data);
+			
+
+			// 임의 데이터로 가공 
+			data = [
+				{"CRT_CD" : "A0001" , "CRT_DTM" : "20250101141211", "CRT_CNT" : 76},
+				{"CRT_CD" : "A0001" , "CRT_DTM" : "20250101141212", "CRT_CNT" : 40},
+				{"CRT_CD" : "A0001" , "CRT_DTM" : "20250101141213", "CRT_CNT" : 10},
+				{"CRT_CD" : "A0001" , "CRT_DTM" : "20250101141214", "CRT_CNT" : 55},
+				{"CRT_CD" : "B0001" , "CRT_DTM" : "20250101141211", "CRT_CNT" : 16},
+				{"CRT_CD" : "B0001" , "CRT_DTM" : "20250101141212", "CRT_CNT" : 46},
+				{"CRT_CD" : "B0001" , "CRT_DTM" : "20250101141213", "CRT_CNT" : 12},
+				{"CRT_CD" : "B0001" , "CRT_DTM" : "20250101141214", "CRT_CNT" : 81},
+				{"CRT_CD" : "C0001" , "CRT_DTM" : "20250101141211", "CRT_CNT" : 36},
+				{"CRT_CD" : "C0001" , "CRT_DTM" : "20250101141212", "CRT_CNT" : 41},
+				{"CRT_CD" : "C0001" , "CRT_DTM" : "20250101141213", "CRT_CNT" : 15},
+				{"CRT_CD" : "C0001" , "CRT_DTM" : "20250101141214", "CRT_CNT" : 33}
+			]
+			
+			// 데이터가 이렇게 넘어온다고 쳤을 때
+			// 일단 설비종류 갯수를 알아야함
+			var cnt = 0; 
+			var array = [];
+			
+			for(let i=0; i<data.length; i++){
+				if(i == 0){
+					var a = data[i].CRT_CD
+					++cnt;
+					array.push(a);
+				}
+				
+				if(data[i].CRT_CD != a){
+					++cnt;
+					a = data[i].CRT_CD;
+					array.push(a);
+				}
+				
+			}
+			
+			console.log("array >> ", array);
 			
 			//시리즈 세팅
-			for(let i=0; i<3; i++){
+			for(let i=0; i<array.length; i++){
 				chart[0].addSeries({
-				    name: '새로운 라인',
+				    name: array[i],
 				    type: 'spline',
 				    color: '#FF0000',
 				    data: []
 				});	
 			}
 			
-			var arr = [["20240612343435",80],["20240612343435",50]];
-			var arr2 = [["20240612343435",10],["20240612343437",100]];
-			var arr3 = [["20240612343435",60],["20240612343437",20]];
+			//데이터 넣기 (이중배열로 넣기)
+			
+			
+// 			var arr = [["20250101141211",76],["20250101141212",40]];
+// 			var arr2 = [["20250101141211",10],["20250101141212",100]];
+// 			var arr3 = [["20250101141211",60],["20250101141212",20]];
 
 
-			chart[0].series[0].setData(arr);
-			chart[0].series[1].setData(arr2);
-			chart[0].series[2].setData(arr3);
+// 			chart[0].series[0].setData(arr);
+// 			chart[0].series[1].setData(arr2);
+// 			chart[0].series[2].setData(arr3);
 			
 
 			}
@@ -474,7 +518,7 @@ $(function() {
 								   
 			                	   alert("정상적으로 처리되었습니다.");
 			                	   
-			                	   crtPrac.search();
+			                	   chartPrac.search();
 			                   }
 			                   
 			                   
@@ -491,7 +535,7 @@ $(function() {
 		},
 	};
 
-	crtPrac.init();
+	chartPrac.init();
 
 });
 
